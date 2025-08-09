@@ -137,4 +137,27 @@ class PropertyController extends Controller
 
         return redirect()->route('properties.index');
     }
+
+    public function addMedia(Request $request, Property $property)
+    {
+        $request->validate([
+            'media' => 'required|array',
+            'media.*.file' => 'required|file|mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg,qt|max:20480',
+            'media.*.label' => 'required|string|in:property_image,floor_plan',
+        ]);
+
+        foreach ($request->file('media') as $mediaItem) {
+            $file = $mediaItem['file'];
+            $label = $mediaItem['label'];
+            $path = $file->store('properties', 'public');
+
+            $property->media()->create([
+                'path' => $path,
+                'type' => str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image',
+                'label' => $label,
+            ]);
+        }
+
+        return redirect()->route('properties.index');
+    }
 }

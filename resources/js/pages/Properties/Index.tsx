@@ -15,6 +15,7 @@ import {
 	Trash2,
 	Upload,
     View,
+    ImagePlus,
 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +42,7 @@ import AppLayout from "@/layouts/app-layout";
 import type { PageProps } from "@/types";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import MediaUploadModal from "@/components/media-upload-modal";
 
 interface Media {
     id: number;
@@ -85,6 +87,8 @@ export default function PropertiesIndex({
 	const [searchTerm, setSearchTerm] = useState("");
 	const [statusFilter, setStatusFilter] = useState("all");
 	const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
+    const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+    const [currentPropertyId, setCurrentPropertyId] = useState<string | null>(null);
 
 	const { delete: inertiaDelete } = useForm();
 
@@ -143,6 +147,33 @@ export default function PropertiesIndex({
 
 		doc.save("properties.pdf");
 	};
+
+    const handleAddMediaClick = (propertyId: string) => {
+        setCurrentPropertyId(propertyId);
+        setIsMediaModalOpen(true);
+    };
+
+    const handleMediaUpload = (files: File[], label: string) => {
+        if (!currentPropertyId) return;
+
+        const formData = new FormData();
+        files.forEach((file, index) => {
+            formData.append(`media[${index}][file]`, file);
+            formData.append(`media[${index}][label]`, label);
+        });
+
+        router.post(route('properties.addMedia', currentPropertyId), formData, {
+            onSuccess: () => {
+                toast({ title: "Media Uploaded", description: "Media files have been successfully uploaded." });
+                setIsMediaModalOpen(false);
+                setCurrentPropertyId(null);
+            },
+            onError: (e) => {
+                console.error(e);
+                toast({ title: "Error", description: "Failed to upload media.", variant: "destructive" });
+            },
+        });
+    };
 
 	const handleDelete = (id: string) => {
 		if (confirm("Are you sure you want to delete this property?")) {
@@ -404,6 +435,11 @@ export default function PropertiesIndex({
 										</TableRow>
 									))}
 								</TableBody>
+								<MediaUploadModal
+                                    isOpen={isMediaModalOpen}
+                                    onClose={() => setIsMediaModalOpen(false)}
+                                    onUpload={handleMediaUpload}
+                                />
 							</Table>
 						</div>
 					</div>

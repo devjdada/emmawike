@@ -24,6 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('properties', PropertyController::class);
     Route::put('properties/{property}/status', [PropertyController::class, 'updateStatus'])->name('properties.updateStatus');
+    Route::post('properties/{property}/media', [PropertyController::class, 'addMedia'])->name('properties.addMedia');
 
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('users/create', [UserController::class, 'create'])->name('users.create');

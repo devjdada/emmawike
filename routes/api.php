@@ -31,3 +31,4 @@ Route::apiResource('complaints', ComplaintController::class);
 Route::apiResource('compensation-evaluations', CompensationEvaluationController::class);
 Route::apiResource('rent-agreements', RentAgreementController::class);
 Route::apiResource('users', UserController::class);
+Route::get('published-properties', [App\Http\Controllers\Api\PublishedPropertyController::class, 'index']);

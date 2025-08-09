@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Download, Upload, Search, Building, Hammer, DollarSign, Users, Star, MapPin, Edit, Trash2, MoreHorizontal, Plus, Home, Eye, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Download, Upload, Search, Building, Hammer, DollarSign, Users, Star, MapPin, Edit, Trash2, MoreHorizontal, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -31,8 +31,6 @@ interface Project {
     progress: number | null;
     date_added: string | null;
     is_featured: boolean;
-    views: number;
-    inquiries: number;
 }
 
 interface ProjectsIndexProps extends PageProps {
@@ -139,67 +137,6 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                                 </Link>
                             </Button>
                         </div>
-                    </div>
-
-                    {/* Stats Overview */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Total Projects</p>
-                                        <p className="text-3xl font-bold text-foreground">{initialProjects.length}</p>
-                                    </div>
-                                    <Home className="h-8 w-8 text-primary" />
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-2">All project listings</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Published</p>
-                                        <p className="text-3xl font-bold text-foreground">
-                                            {initialProjects.filter(p => p.status === "published").length}
-                                        </p>
-                                    </div>
-                                    <Eye className="h-8 w-8 text-green-500" />
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-2">Live on the market</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Total Views</p>
-                                        <p className="text-3xl font-bold text-foreground">
-                                            {initialProjects.reduce((sum, p) => sum + (p.views || 0), 0).toLocaleString()}
-                                        </p>
-                                    </div>
-                                    <TrendingUp className="h-8 w-8 text-blue-500" />
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-2">Across all projects</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Inquiries</p>
-                                        <p className="text-3xl font-bold text-foreground">
-                                            {initialProjects.reduce((sum, p) => sum + (p.inquiries || 0), 0)}
-                                        </p>
-                                    </div>
-                                    <DollarSign className="h-8 w-8 text-yellow-500" />
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-2">Total customer interest</p>
-                            </CardContent>
-                        </Card>
                     </div>
 
                     {/* Stats Cards */}

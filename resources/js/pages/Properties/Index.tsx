@@ -149,6 +149,7 @@ export default function PropertiesIndex({
 	};
 
     const handleAddMediaClick = (propertyId: string) => {
+        console.log("Add Media button clicked for property: ", propertyId);
         setCurrentPropertyId(propertyId);
         setIsMediaModalOpen(true);
     };

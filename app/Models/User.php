@@ -6,11 +6,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
+
+    public $incrementing = false;
+    public $keyType = 'string';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) \Illuminate\Support\Str::uuid();
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +34,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'agency_id',
+        'role',
     ];
 
     /**
@@ -44,5 +59,45 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class);
+    }
+
+    public function agency()
+    {
+        return $this->belongsTo(Agency::class);
+    }
+
+    public function tenants()
+    {
+        return $this->hasMany(Tenant::class);
+    }
+
+    public function owners()
+    {
+        return $this->hasMany(Owner::class);
+    }
+
+    public function complaints()
+    {
+        return $this->hasMany(Complaint::class, 'created_by');
+    }
+
+    public function isTenant()
+    {
+        return $this->role === 'tenant';
+    }
+
+    public function isOwner()
+    {
+        return $this->role === 'owner';
     }
 }

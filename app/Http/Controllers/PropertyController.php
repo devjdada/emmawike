@@ -82,31 +82,35 @@ class PropertyController extends Controller
     public function update(Request $request, Property $property)
     {
         $validated = $request->validate([
-            'owner_id' => 'required|exists:users,id',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'type' => 'required|string',
-            'price' => 'required|numeric',
-            'currency' => 'required|string',
-            'address_line1' => 'required|string',
+            'owner_id' => 'sometimes|required|exists:users,id',
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string',
+            'type' => 'sometimes|required|string',
+            'price' => 'sometimes|required|numeric',
+            'currency' => 'sometimes|required|string',
+            'address_line1' => 'sometimes|required|string',
             'address_line2' => 'nullable|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'country' => 'required|string',
+            'city' => 'sometimes|required|string',
+            'state' => 'sometimes|required|string',
+            'country' => 'sometimes|required|string',
             'zip_code' => 'nullable|string',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
-            'bedrooms' => 'required|integer',
-            'bathrooms' => 'required|integer',
-            'area_sq_ft' => 'required|integer',
-            'status' => 'required|string',
-            'is_featured' => 'required|boolean',
+            'bedrooms' => 'sometimes|required|integer',
+            'bathrooms' => 'sometimes|required|integer',
+            'area_sq_ft' => 'sometimes|required|integer',
+            'status' => 'sometimes|required|string',
+            'is_featured' => 'sometimes|required|boolean',
+            'image_url' => 'nullable|url',
             'media' => 'nullable|array',
             'media.*' => 'file|mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg,qt|max:20480',
+            'deleted_media_ids' => 'nullable|array',
+            'deleted_media_ids.*' => 'exists:property_media,id',
         ]);
 
         $property->update($validated);
 
+        // Handle new media uploads
         if ($request->hasFile('media')) {
             foreach ($request->file('media') as $file) {
                 $path = $file->store('properties', 'public');
@@ -115,6 +119,17 @@ class PropertyController extends Controller
                     'type' => str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image',
                     'label' => 'property_image',
                 ]);
+            }
+        }
+
+        // Handle media deletions
+        if ($request->has('deleted_media_ids')) {
+            foreach ($request->input('deleted_media_ids') as $mediaId) {
+                $mediaItem = $property->media()->find($mediaId);
+                if ($mediaItem) {
+                    Storage::disk('public')->delete($mediaItem->path);
+                    $mediaItem->delete();
+                }
             }
         }
 

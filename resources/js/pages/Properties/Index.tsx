@@ -16,6 +16,7 @@ import {
 	Upload,
     View,
     ImagePlus,
+    MoreHorizontal,
 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +38,14 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import AppLayout from "@/layouts/app-layout";
 import type { PageProps } from "@/types";
@@ -410,32 +419,38 @@ export default function PropertiesIndex({
 												</Select>
 											</TableCell>
 											<TableCell>
-												<div className="flex items-center gap-2">
-													<Button variant="outline" size="sm" asChild>
-														<Link href={route("properties.show", property.id)}>
-															<View className="h-4 w-4" />
-														</Link>
-													</Button>
-													<MediaUploadModal
-														onUpload={(files, label) => handleMediaUpload(property.id, files, label)}
-													>
-														<Button variant="outline" size="sm">
-															<ImagePlus className="h-4 w-4" />
+												<DropdownMenu>
+													<DropdownMenuTrigger asChild>
+														<Button variant="ghost" className="h-8 w-8 p-0">
+															<span className="sr-only">Open menu</span>
+															<MoreHorizontal className="h-4 w-4" />
 														</Button>
-													</MediaUploadModal>
-													<Button variant="outline" size="sm" asChild>
-														<Link href={route("properties.edit", property.id)}>
-															<Edit className="h-4 w-4" />
-														</Link>
-													</Button>
-													<Button
-														variant="outline"
-														size="sm"
-														onClick={() => handleDelete(property.id)}
-													>
-														<Trash2 className="h-4 w-4" />
-													</Button>
-												</div>
+													</DropdownMenuTrigger>
+													<DropdownMenuContent align="end">
+														<DropdownMenuLabel>Actions</DropdownMenuLabel>
+														<DropdownMenuItem asChild>
+															<Link href={route("properties.show", property.id)}>
+																<View className="mr-2 h-4 w-4" />View Details
+															</Link>
+														</DropdownMenuItem>
+														<MediaUploadModal
+															onUpload={(files, label) => handleMediaUpload(property.id, files, label)}
+														>
+															<DropdownMenuItem>
+																<ImagePlus className="mr-2 h-4 w-4" />Add Media
+															</DropdownMenuItem>
+														</MediaUploadModal>
+														<DropdownMenuItem asChild>
+															<Link href={route("properties.edit", property.id)}>
+																<Edit className="mr-2 h-4 w-4" />Edit
+															</Link>
+														</DropdownMenuItem>
+														<DropdownMenuSeparator />
+														<DropdownMenuItem onClick={() => handleDelete(property.id)} className="text-destructive focus:text-destructive">
+															<Trash2 className="mr-2 h-4 w-4" />Delete
+														</DropdownMenuItem>
+													</DropdownMenuContent>
+												</DropdownMenu>
 											</TableCell>
 										</TableRow>
 									))}

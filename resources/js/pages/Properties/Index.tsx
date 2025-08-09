@@ -451,5 +451,4 @@ export default function PropertiesIndex({
 		</AppLayout>
 	);
 }
-}
 

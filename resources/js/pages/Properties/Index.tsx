@@ -154,20 +154,17 @@ export default function PropertiesIndex({
         setIsMediaModalOpen(true);
     };
 
-    const handleMediaUpload = (files: File[], label: string) => {
-        if (!currentPropertyId) return;
-
+    const handleMediaUpload = (propertyId: string, files: File[], label: string) => {
         const formData = new FormData();
         files.forEach((file, index) => {
             formData.append(`media[${index}][file]`, file);
             formData.append(`media[${index}][label]`, label);
         });
 
-        router.post(route('properties.addMedia', currentPropertyId), formData, {
+        router.post(route('properties.addMedia', propertyId), formData, {
             onSuccess: () => {
                 toast({ title: "Media Uploaded", description: "Media files have been successfully uploaded." });
-                setIsMediaModalOpen(false);
-                setCurrentPropertyId(null);
+                // No need to close modal or clear currentPropertyId here, as each modal is self-contained
             },
             onError: (e) => {
                 console.error(e);
@@ -419,9 +416,13 @@ export default function PropertiesIndex({
 															<View className="h-4 w-4" />
 														</Link>
 													</Button>
-													<Button variant="outline" size="sm" onClick={() => handleAddMediaClick(property.id)}>
-														<ImagePlus className="h-4 w-4" />
-													</Button>
+													<MediaUploadModal
+														onUpload={(files, label) => handleMediaUpload(property.id, files, label)}
+													>
+														<Button variant="outline" size="sm">
+															<ImagePlus className="h-4 w-4" />
+														</Button>
+													</MediaUploadModal>
 													<Button variant="outline" size="sm" asChild>
 														<Link href={route("properties.edit", property.id)}>
 															<Edit className="h-4 w-4" />
@@ -444,11 +445,6 @@ export default function PropertiesIndex({
 					</div>
 				</div>
 			</div>
-            <MediaUploadModal
-                isOpen={isMediaModalOpen}
-                onClose={() => setIsMediaModalOpen(false)}
-                onUpload={handleMediaUpload}
-            />
 		</AppLayout>
 	);
 }

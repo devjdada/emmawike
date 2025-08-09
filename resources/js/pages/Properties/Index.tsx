@@ -418,6 +418,9 @@ export default function PropertiesIndex({
 															<View className="h-4 w-4" />
 														</Link>
 													</Button>
+													<Button variant="outline" size="sm" onClick={() => handleAddMediaClick(property.id)}>
+														<ImagePlus className="h-4 w-4" />
+													</Button>
 													<Button variant="outline" size="sm" asChild>
 														<Link href={route("properties.edit", property.id)}>
 															<Edit className="h-4 w-4" />
@@ -435,17 +438,18 @@ export default function PropertiesIndex({
 										</TableRow>
 									))}
 								</TableBody>
-								<MediaUploadModal
-                                    isOpen={isMediaModalOpen}
-                                    onClose={() => setIsMediaModalOpen(false)}
-                                    onUpload={handleMediaUpload}
-                                />
 							</Table>
 						</div>
 					</div>
 				</div>
 			</div>
+            <MediaUploadModal
+                isOpen={isMediaModalOpen}
+                onClose={() => setIsMediaModalOpen(false)}
+                onUpload={handleMediaUpload}
+            />
 		</AppLayout>
 	);
+}
 }
 

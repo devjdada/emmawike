@@ -23,9 +23,12 @@ export default function CreateProject({ auth }: PageProps) {
         start_date: '',
         end_date: '',
         image_url: '',
-        // Note: 'budget', 'location', 'teamSize', and 'featured' fields from the design concept
-        // are not present in the current Project model. They are omitted here.
-        // If needed, the Project model and its migration should be updated.
+        budget: '',
+        location: '',
+        team_size: '',
+        progress: '',
+        date_added: '',
+        is_featured: false,
     });
 
     const submit = (e: React.FormEvent) => {
@@ -73,16 +76,17 @@ export default function CreateProject({ auth }: PageProps) {
                                         <Input id="title" placeholder="Luxury Resort Development..." value={data.title} onChange={(e) => setData('title', e.target.value)} />
                                         <InputError message={errors.title} />
                                     </div>
-                                    {/* Budget field - not in model */}
-                                    {/* <div className="col-span-1">
+                                    </div>
+                                    <div>
                                         <Label htmlFor="budget">Budget</Label>
-                                        <Input id="budget" type="number" placeholder="15000000" />
-                                    </div> */}
-                                    {/* Location field - not in model */}
-                                    {/* <div className="col-span-1">
+                                        <Input id="budget" type="number" placeholder="15000000" value={data.budget} onChange={(e) => setData('budget', e.target.value)} />
+                                        <InputError message={errors.budget} />
+                                    </div>
+                                    <div>
                                         <Label htmlFor="location">Location</Label>
-                                        <Input id="location" placeholder="Malibu, CA" />
-                                    </div> */}
+                                        <Input id="location" placeholder="Malibu, CA" value={data.location} onChange={(e) => setData('location', e.target.value)} />
+                                        <InputError message={errors.location} />
+                                    </div>
                                     <div>
                                         <Label>Project Type</Label>
                                         <Select onValueChange={(value) => setData('type', value)} value={data.type}>
@@ -115,11 +119,22 @@ export default function CreateProject({ auth }: PageProps) {
                                         </Select>
                                         <InputError message={errors.status} />
                                     </div>
-                                    {/* Team Size field - not in model */}
-                                    {/* <div className="col-span-1">
-                                        <Label htmlFor="teamSize">Team Size</Label>
-                                        <Input id="teamSize" type="number" placeholder="25" />
-                                    </div> */}
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="team_size">Team Size</Label>
+                                        <Input id="team_size" type="number" placeholder="25" value={data.team_size} onChange={(e) => setData('team_size', e.target.value)} />
+                                        <InputError message={errors.team_size} />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="progress">Progress</Label>
+                                        <Input id="progress" type="number" placeholder="45" value={data.progress} onChange={(e) => setData('progress', e.target.value)} />
+                                        <InputError message={errors.progress} />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="date_added">Date Added</Label>
+                                        <Input id="date_added" type="date" value={data.date_added} onChange={(e) => setData('date_added', e.target.value)} />
+                                        <InputError message={errors.date_added} />
+                                    </div>
                                     <div>
                                         <Label htmlFor="start_date">Start Date</Label>
                                         <Input id="start_date" type="date" value={data.start_date} onChange={(e) => setData('start_date', e.target.value)} />
@@ -144,11 +159,14 @@ export default function CreateProject({ auth }: PageProps) {
                                     <InputError message={errors.description} />
                                 </div>
 
-                                {/* Featured checkbox - not in model */}
-                                {/* <div className="flex flex-row items-center space-x-3 space-y-0">
-                                    <Checkbox id="featured" />
-                                    <Label htmlFor="featured" className="text-sm font-normal">Featured Project</Label>
-                                </div> */}
+                                <div className="flex flex-row items-start space-x-3 space-y-0">
+                                    <Checkbox id="is_featured" checked={data.is_featured} onCheckedChange={(checked) => setData('is_featured', checked as boolean)} />
+                                    <div className="space-y-1 leading-none">
+                                        <Label htmlFor="is_featured">Featured Project</Label>
+                                        <p className="text-sm text-muted-foreground">Mark this project as featured to highlight it on the homepage</p>
+                                    </div>
+                                    <InputError message={errors.is_featured} />
+                                </div>
 
                                 <div className="flex justify-end gap-4">
                                     <Link href={route('projects.index')}>

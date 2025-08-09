@@ -22,6 +22,12 @@ class Project extends Model
         'start_date',
         'end_date',
         'image_url',
+        'budget',
+        'location',
+        'is_featured',
+        'progress',
+        'date_added',
+        'team_size',
     ];
 
     public function postedByStaff()

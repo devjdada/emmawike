@@ -2,20 +2,35 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import InputError from '@/components/input-error';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
+import { ArrowLeft, Download, Upload, Search, Building, Hammer, DollarSign, Users, Star, MapPin, Edit, Trash2, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface Project {
-    id: number;
-    posted_by_staff_id: number;
+    id: string;
+    posted_by_staff_id: string;
     title: string;
     description: string;
-    type: string | null;
+    type: string;
     status: string;
-    start_date: string | null;
-    end_date: string | null;
+    start_date: string;
+    end_date: string;
     image_url: string | null;
+    budget: number | null;
+    location: string | null;
+    team_size: number | null;
+    progress: number | null;
+    date_added: string | null;
+    is_featured: boolean;
 }
 
 interface ProjectsIndexProps extends PageProps {
@@ -23,13 +38,51 @@ interface ProjectsIndexProps extends PageProps {
 }
 
 export default function ProjectsIndex({ auth, projects: initialProjects }: ProjectsIndexProps) {
+    const { toast } = useToast();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
     const { delete: inertiaDelete } = useForm();
 
-    const handleDeleteClick = (project: Project) => {
-        setSelectedProject(project);
+    const filteredProjects = initialProjects.filter(project => {
+        const matchesSearch = searchTerm === '' ||
+            project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (project.location && project.location.toLowerCase().includes(searchTerm.toLowerCase()));
+
+        const matchesStatus = statusFilter === null || statusFilter === 'all' ||
+            project.status.toLowerCase() === statusFilter.toLowerCase();
+
+        return matchesSearch && matchesStatus;
+    });
+
+    const getStatusVariant = (status: string) => {
+        switch (status.toLowerCase()) {
+            case 'planning': return 'secondary';
+            case 'in progress': return 'default';
+            case 'completed': return 'success'; // Assuming a 'success' variant exists or can be added
+            case 'on hold': return 'warning';   // Assuming a 'warning' variant exists or can be added
+            default: return 'outline';
+        }
+    };
+
+    const getProgressColor = (progress: number | null) => {
+        if (progress === null) return 'bg-gray-400';
+        if (progress < 25) return 'bg-red-500';
+        if (progress < 75) return 'bg-yellow-500';
+        return 'bg-green-500';
+    };
+
+    const handleEdit = (project: Project) => {
+        // Implement navigation to edit page
+        console.log('Edit project:', project.id);
+        window.location.href = route('projects.edit', project.id);
+    };
+
+    const handleDelete = (id: string) => {
+        setSelectedProject(initialProjects.find(p => p.id === id) || null);
         setIsDeleteDialogOpen(true);
     };
 
@@ -40,7 +93,8 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                     toast({ title: "Project Deleted", description: "The project has been removed from the listings." });
                     setIsDeleteDialogOpen(false);
                 },
-                onError: () => {
+                onError: (e) => {
+                    console.error(e);
                     toast({ title: "Error", description: "Failed to delete project.", variant: "destructive" });
                 },
             });
@@ -51,40 +105,213 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
         <AppLayout user={auth.user}>
             <Head title="Projects" />
 
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-semibold">Projects</h1>
-                <Button asChild><Link href={route('projects.create')}>Add New Project</Link></Button>
-            </div>
-
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Title</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Start Date</TableHead>
-                        <TableHead>End Date</TableHead>
-                        <TableHead>Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {initialProjects.map((project) => (
-                        <TableRow key={project.id}>
-                            <TableCell>{project.title}</TableCell>
-                            <TableCell>{project.type || 'N/A'}</TableCell>
-                            <TableCell>{project.status}</TableCell>
-                            <TableCell>{project.start_date || 'N/A'}</TableCell>
-                            <TableCell>{project.end_date || 'N/A'}</TableCell>
-                            <TableCell>
-                                <Button variant="outline" size="sm" className="mr-2" asChild>
-                                    <Link href={route('projects.edit', project.id)}>Edit</Link>
+            <div className="pt-24 pb-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-8">
+                        <div className="flex items-center gap-4">
+                            <Link href={route('dashboard')}>
+                                <Button variant="ghost" size="sm">
+                                    <ArrowLeft className="h-4 w-4 mr-2" />
+                                    Back to Dashboard
                                 </Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(project)}>Delete</Button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                            </Link>
+                            <div>
+                                <h1 className="text-3xl font-bold text-foreground">Project Management</h1>
+                                <p className="text-muted-foreground">Manage all your construction projects in one place</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline">
+                                <Download className="h-4 w-4 mr-2" />
+                                Export
+                            </Button>
+                            <Button variant="outline">
+                                <Upload className="h-4 w-4 mr-2" />
+                                Import
+                            </Button>
+                            <Button asChild>
+                                <Link href={route('projects.create')}>
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Project
+                                </Link>
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
+                                <Building className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{filteredProjects.length}</div>
+                                <p className="text-xs text-muted-foreground">Active portfolio</p>
+                            </CardContent>
+                        </Card>
+                        
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">In Progress</CardTitle>
+                                <Hammer className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {filteredProjects.filter(p => p.status === "in progress").length}
+                                </div>
+                                <p className="text-xs text-muted-foreground">Currently active</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
+                                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">${filteredProjects.reduce((total, project) => total + (project.budget || 0), 0).toLocaleString()}</div>
+                                <p className="text-xs text-muted-foreground">Combined value</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Team Members</CardTitle>
+                                <Users className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {filteredProjects.reduce((total, project) => total + (project.team_size || 0), 0)}
+                                </div>
+                                <p className="text-xs text-muted-foreground">Total workforce</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Filters and Search */}
+                    <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                        <div className="relative flex-1">
+                            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Search projects..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="pl-10"
+                            />
+                        </div>
+                        <Select value={statusFilter || "all"} onValueChange={(value) => setStatusFilter(value === "all" ? null : value)}>
+                            <SelectTrigger className="w-full sm:w-[200px]">
+                                <SelectValue placeholder="Filter by status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Statuses</SelectItem>
+                                <SelectItem value="planning">Planning</SelectItem>
+                                <SelectItem value="in progress">In Progress</SelectItem>
+                                <SelectItem value="completed">Completed</SelectItem>
+                                <SelectItem value="on hold">On Hold</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {/* Projects Table */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Projects Overview</CardTitle>
+                            <CardDescription>
+                                Manage and track all your construction projects
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Project</TableHead>
+                                        <TableHead>Type</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Budget</TableHead>
+                                        <TableHead>Progress</TableHead>
+                                        <TableHead>Team</TableHead>
+                                        <TableHead>Timeline</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {filteredProjects.map((project) => (
+                                        <TableRow key={project.id}>
+                                            <TableCell>
+                                                <div className="flex items-center gap-2">
+                                                    {project.is_featured && <Star className="h-4 w-4 text-yellow-500" />}
+                                                    <div>
+                                                        <div className="font-medium">{project.title}</div>
+                                                        <div className="text-sm text-muted-foreground flex items-center gap-1">
+                                                            <MapPin className="h-3 w-3" />
+                                                            {project.location || 'N/A'}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge variant="outline">{project.type}</Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge variant={getStatusVariant(project.status)}>
+                                                    {project.status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>${(project.budget || 0).toLocaleString()}</TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-16 bg-gray-200 rounded-full h-2">
+                                                        <div 
+                                                            className={`h-2 rounded-full ${getProgressColor(project.progress)}`}
+                                                            style={{ width: `${project.progress || 0}%` }}
+                                                        />
+                                                    </div>
+                                                    <span className="text-sm">{project.progress || 0}%</span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center gap-1">
+                                                    <Users className="h-3 w-3" />
+                                                    {project.team_size || 'N/A'}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="text-sm">
+                                                    <div>{project.start_date || 'N/A'}</div>
+                                                    <div className="text-muted-foreground">to {project.end_date || 'N/A'}</div>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" className="h-8 w-8 p-0">
+                                                            <span className="sr-only">Open menu</span>
+                                                            <MoreHorizontal className="h-4 w-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                                        <DropdownMenuItem onClick={() => handleEdit(project)}>
+                                                            <Edit className="mr-2 h-4 w-4" />Edit
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem onClick={() => handleDelete(project.id)} className="text-destructive focus:text-destructive">
+                                                            <Trash2 className="mr-2 h-4 w-4" />Delete
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
 
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <DialogContent>

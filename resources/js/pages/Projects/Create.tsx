@@ -76,7 +76,6 @@ export default function CreateProject({ auth }: PageProps) {
                                         <Input id="title" placeholder="Luxury Resort Development..." value={data.title} onChange={(e) => setData('title', e.target.value)} />
                                         <InputError message={errors.title} />
                                     </div>
-                                    </div>
                                     <div>
                                         <Label htmlFor="budget">Budget</Label>
                                         <Input id="budget" type="number" placeholder="15000000" value={data.budget} onChange={(e) => setData('budget', e.target.value)} />
@@ -118,7 +117,6 @@ export default function CreateProject({ auth }: PageProps) {
                                             </SelectContent>
                                         </Select>
                                         <InputError message={errors.status} />
-                                    </div>
                                     </div>
                                     <div>
                                         <Label htmlFor="team_size">Team Size</Label>

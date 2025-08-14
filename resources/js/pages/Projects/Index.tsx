@@ -17,7 +17,8 @@ import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/layouts/app-layout';
 import type { PageProps } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { Download, Edit, MapPin, MoreHorizontal, Plus, Search, Star, Trash2, Upload, Users } from 'lucide-react';
+import { Building, Hammer, DollarSign, Users } from 'lucide-react';
+import { Download, Edit, MapPin, MoreHorizontal, Plus, Search, Star, Trash2, Upload } from 'lucide-react';
 import { useState } from 'react';
 
 interface Project {
@@ -148,6 +149,57 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                                 </Link>
                             </Button>
                         </div>
+                    </div>
+
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
+                                <Building className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">{filteredProjects.length}</div>
+                                <p className="text-xs text-muted-foreground">Active portfolio</p>
+                            </CardContent>
+                        </Card>
+                        
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">In Progress</CardTitle>
+                                <Hammer className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {filteredProjects.filter(p => p.status === "in progress").length}
+                                </div>
+                                <p className="text-xs text-muted-foreground">Currently active</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
+                                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">${filteredProjects.reduce((total, project) => total + (project.budget || 0), 0).toLocaleString()}</div>
+                                <p className="text-xs text-muted-foreground">Combined value</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Team Members</CardTitle>
+                                <Users className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {filteredProjects.reduce((total, project) => total + (project.team_size || 0), 0)}
+                                </div>
+                                <p className="text-xs text-muted-foreground">Total workforce</p>
+                            </CardContent>
+                        </Card>
                     </div>
 
                     {/* Filters and Search */}

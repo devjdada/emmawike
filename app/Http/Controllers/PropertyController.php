@@ -164,7 +164,7 @@ class PropertyController extends Controller
 
         foreach ($request->file('media') as $mediaItem) {
             $file = $mediaItem['file'];
-            $label = $mediaItem['label'];
+            $label = data_get($mediaItem, 'label', 'property_image');
             $path = $file->store('properties', 'public');
 
             $property->media()->create([

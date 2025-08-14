@@ -1,5 +1,19 @@
 import { Link } from "@inertiajs/react";
-import { BookOpen, Folder, LayoutGrid } from "lucide-react";
+import {
+	BookOpen,
+	Briefcase,
+	Building2,
+	ClipboardList,
+	FileSignature,
+	FileText,
+	Folder,
+	Home,
+	LayoutGrid,
+	Settings,
+	UserCheck,
+	UserSquare2,
+	Users,
+} from "lucide-react";
 import { NavFooter } from "@/components/nav-footer";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -24,53 +38,52 @@ const mainNavItems: NavItem[] = [
 	{
 		title: "Properties",
 		href: "/properties",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: Home,
 	},
 	{
 		title: "Projects",
 		href: "/projects",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: Briefcase,
 	},
 	{
 		title: "User",
 		href: "/users",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: Users,
 	},
 	{
 		title: "Agency",
 		href: "/agencies",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: Building2,
 	},
 	{
 		title: "Blogs",
 		href: "/blogs",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: FileText,
 	},
 	{
 		title: "Services",
 		href: "/services",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: Settings,
 	},
-
 	{
 		title: "Tenants",
 		href: "/tenants",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: UserSquare2,
 	},
 	{
 		title: "Owners",
 		href: "/owners",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: UserCheck,
 	},
 	{
 		title: "Compensation Evaluations",
 		href: "/compensation-evaluations",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: ClipboardList,
 	},
 	{
 		title: "Rent Agreements",
 		href: "/rent-agreements",
-		icon: Folder, // You can choose a more appropriate icon
+		icon: FileSignature,
 	},
 ];
 

@@ -27,6 +27,8 @@ import {
     DollarSign,
     Download,
     Edit,
+    Eye,
+    Home,
     ImagePlus,
     MapPin,
     MoreHorizontal,
@@ -35,11 +37,9 @@ import {
     Square,
     Star,
     Trash2,
+    TrendingUp,
     Upload,
     View,
-    Home,
-    Eye,
-    TrendingUp,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -261,7 +261,7 @@ export default function PropertiesIndex({ auth, properties: initialProperties }:
                     </div>
 
                     {/* Stats Overview */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                         <Card>
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
@@ -271,7 +271,7 @@ export default function PropertiesIndex({ auth, properties: initialProperties }:
                                     </div>
                                     <Home className="h-8 w-8 text-primary" />
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-2">All property listings</p>
+                                <p className="mt-2 text-xs text-muted-foreground">All property listings</p>
                             </CardContent>
                         </Card>
 
@@ -281,12 +281,12 @@ export default function PropertiesIndex({ auth, properties: initialProperties }:
                                     <div>
                                         <p className="text-sm font-medium text-muted-foreground">Published</p>
                                         <p className="text-3xl font-bold text-foreground">
-                                            {filteredProperties.filter(p => p.status === "published").length}
+                                            {filteredProperties.filter((p) => p.status === 'published').length}
                                         </p>
                                     </div>
                                     <Eye className="h-8 w-8 text-green-500" />
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-2">Live on the market</p>
+                                <p className="mt-2 text-xs text-muted-foreground">Live on the market</p>
                             </CardContent>
                         </Card>
 
@@ -301,7 +301,7 @@ export default function PropertiesIndex({ auth, properties: initialProperties }:
                                     </div>
                                     <TrendingUp className="h-8 w-8 text-blue-500" />
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-2">Across all properties</p>
+                                <p className="mt-2 text-xs text-muted-foreground">Across all properties</p>
                             </CardContent>
                         </Card>
 
@@ -316,7 +316,7 @@ export default function PropertiesIndex({ auth, properties: initialProperties }:
                                     </div>
                                     <DollarSign className="h-8 w-8 text-yellow-500" />
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-2">Total customer interest</p>
+                                <p className="mt-2 text-xs text-muted-foreground">Total customer interest</p>
                             </CardContent>
                         </Card>
                     </div>

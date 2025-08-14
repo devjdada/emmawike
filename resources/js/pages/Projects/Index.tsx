@@ -20,6 +20,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { Building, Hammer, DollarSign, Users } from 'lucide-react';
 import { Download, Edit, MapPin, MoreHorizontal, Plus, Search, Star, Trash2, Upload } from 'lucide-react';
 import { useState } from 'react';
+import { truncateText } from '@/lib/utils';
 
 interface Project {
     id: string;
@@ -49,13 +50,6 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string | null>(null);
-
-    const truncateText = (text: string, maxLength: number) => {
-        if (text.length <= maxLength) {
-            return text;
-        }
-        return text.substring(0, maxLength) + '...';
-    };
 
     const { delete: inertiaDelete } = useForm();
 

@@ -1,13 +1,13 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { PageProps } from '@/types';
-import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useState } from 'react';
-import { ArrowLeft, Plus, Edit, Trash2, Download, Upload } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
+import AppLayout from '@/layouts/app-layout';
+import { PageProps } from '@/types';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, Download, Edit, Plus, Trash2, Upload } from 'lucide-react';
+import { useState } from 'react';
 
 interface RentAgreement {
     id: number;
@@ -42,11 +42,11 @@ export default function RentAgreementsIndex({ auth, rentAgreements: initialRentA
         if (selectedAgreement) {
             inertiaDelete(route('rent-agreements.destroy', selectedAgreement.id), {
                 onSuccess: () => {
-                    toast({ title: "Agreement Deleted", description: "The rent agreement has been removed." });
+                    toast({ title: 'Agreement Deleted', description: 'The rent agreement has been removed.' });
                     setIsDeleteDialogOpen(false);
                 },
                 onError: () => {
-                    toast({ title: "Error", description: "Failed to delete agreement.", variant: "destructive" });
+                    toast({ title: 'Error', description: 'Failed to delete agreement.', variant: 'destructive' });
                 },
             });
         }
@@ -54,10 +54,14 @@ export default function RentAgreementsIndex({ auth, rentAgreements: initialRentA
 
     const getStatusVariant = (status: string) => {
         switch (status) {
-            case "active": return "default";
-            case "inactive": return "secondary";
-            case "expired": return "destructive";
-            default: return "secondary";
+            case 'active':
+                return 'default';
+            case 'inactive':
+                return 'secondary';
+            case 'expired':
+                return 'destructive';
+            default:
+                return 'secondary';
         }
     };
 
@@ -66,13 +70,13 @@ export default function RentAgreementsIndex({ auth, rentAgreements: initialRentA
             <Head title="Rent Agreements" />
 
             <div className="pt-24 pb-8">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-8">
+                    <div className="mb-8 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <Link href="/dashboard">
                                 <Button variant="ghost" size="sm">
-                                    <ArrowLeft className="h-4 w-4 mr-2" />
+                                    <ArrowLeft className="mr-2 h-4 w-4" />
                                     Back to Dashboard
                                 </Button>
                             </Link>
@@ -83,16 +87,16 @@ export default function RentAgreementsIndex({ auth, rentAgreements: initialRentA
                         </div>
                         <div className="flex items-center gap-2">
                             <Button variant="outline">
-                                <Download className="h-4 w-4 mr-2" />
+                                <Download className="mr-2 h-4 w-4" />
                                 Export
                             </Button>
                             <Button variant="outline">
-                                <Upload className="h-4 w-4 mr-2" />
+                                <Upload className="mr-2 h-4 w-4" />
                                 Import
                             </Button>
                             <Button asChild>
                                 <Link href={route('rent-agreements.create')}>
-                                    <Plus className="h-4 w-4 mr-2" />
+                                    <Plus className="mr-2 h-4 w-4" />
                                     New Agreement
                                 </Link>
                             </Button>
@@ -124,26 +128,16 @@ export default function RentAgreementsIndex({ auth, rentAgreements: initialRentA
                                             <TableCell>{agreement.property_id}</TableCell>
                                             <TableCell>${agreement.monthly_rent.toLocaleString()}</TableCell>
                                             <TableCell>
-                                                <Badge variant={getStatusVariant(agreement.status)}>
-                                                    {agreement.status}
-                                                </Badge>
+                                                <Badge variant={getStatusVariant(agreement.status)}>{agreement.status}</Badge>
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-2">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        asChild
-                                                    >
+                                                    <Button variant="outline" size="sm" asChild>
                                                         <Link href={route('rent-agreements.edit', agreement.id)}>
                                                             <Edit className="h-4 w-4" />
                                                         </Link>
                                                     </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() => handleDeleteClick(agreement)}
-                                                    >
+                                                    <Button variant="outline" size="sm" onClick={() => handleDeleteClick(agreement)}>
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
                                                 </div>
@@ -166,8 +160,12 @@ export default function RentAgreementsIndex({ auth, rentAgreements: initialRentA
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-                        <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
+                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={confirmDelete}>
+                            Delete
+                        </Button>
                     </div>
                 </DialogContent>
             </Dialog>

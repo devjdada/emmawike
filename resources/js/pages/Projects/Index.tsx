@@ -1,19 +1,24 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { PageProps } from '@/types';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import InputError from '@/components/input-error';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Download, Upload, Search, Building, Hammer, DollarSign, Users, Star, MapPin, Edit, Trash2, MoreHorizontal } from 'lucide-react';
-import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
+import AppLayout from '@/layouts/app-layout';
+import type { PageProps } from '@/types';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { Download, Edit, MapPin, MoreHorizontal, Plus, Search, Star, Trash2, Upload, Users } from 'lucide-react';
+import { useState } from 'react';
 
 interface Project {
     id: string;
@@ -46,25 +51,30 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
 
     const { delete: inertiaDelete } = useForm();
 
-    const filteredProjects = initialProjects.filter(project => {
-        const matchesSearch = searchTerm === '' ||
+    const filteredProjects = initialProjects.filter((project) => {
+        const matchesSearch =
+            searchTerm === '' ||
             project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (project.location && project.location.toLowerCase().includes(searchTerm.toLowerCase()));
 
-        const matchesStatus = statusFilter === null || statusFilter === 'all' ||
-            project.status.toLowerCase() === statusFilter.toLowerCase();
+        const matchesStatus = statusFilter === null || statusFilter === 'all' || project.status.toLowerCase() === statusFilter.toLowerCase();
 
         return matchesSearch && matchesStatus;
     });
 
     const getStatusVariant = (status: string) => {
         switch (status.toLowerCase()) {
-            case 'planning': return 'secondary';
-            case 'in progress': return 'default';
-            case 'completed': return 'success'; // Assuming a 'success' variant exists or can be added
-            case 'on hold': return 'warning';   // Assuming a 'warning' variant exists or can be added
-            default: return 'outline';
+            case 'planning':
+                return 'secondary';
+            case 'in progress':
+                return 'default';
+            case 'completed':
+                return 'success'; // Assuming a 'success' variant exists or can be added
+            case 'on hold':
+                return 'warning'; // Assuming a 'warning' variant exists or can be added
+            default:
+                return 'outline';
         }
     };
 
@@ -82,7 +92,7 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
     };
 
     const handleDelete = (id: string) => {
-        setSelectedProject(initialProjects.find(p => p.id === id) || null);
+        setSelectedProject(initialProjects.find((p) => p.id === id) || null);
         setIsDeleteDialogOpen(true);
     };
 
@@ -90,12 +100,19 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
         if (selectedProject) {
             inertiaDelete(route('projects.destroy', selectedProject.id), {
                 onSuccess: () => {
-                    toast({ title: "Project Deleted", description: "The project has been removed from the listings." });
+                    toast({
+                        title: 'Project Deleted',
+                        description: 'The project has been removed from the listings.',
+                    });
                     setIsDeleteDialogOpen(false);
                 },
                 onError: (e) => {
                     console.error(e);
-                    toast({ title: "Error", description: "Failed to delete project.", variant: "destructive" });
+                    toast({
+                        title: 'Error',
+                        description: 'Failed to delete project.',
+                        variant: 'destructive',
+                    });
                 },
             });
         }
@@ -106,16 +123,10 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
             <Head title="Projects" />
 
             <div className="pt-24 pb-8">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-8">
+                    <div className="mb-8 flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <Link href={route('dashboard')}>
-                                <Button variant="ghost" size="sm">
-                                    <ArrowLeft className="h-4 w-4 mr-2" />
-                                    Back to Dashboard
-                                </Button>
-                            </Link>
                             <div>
                                 <h1 className="text-3xl font-bold text-foreground">Project Management</h1>
                                 <p className="text-muted-foreground">Manage all your construction projects in one place</p>
@@ -123,77 +134,26 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                         </div>
                         <div className="flex items-center gap-2">
                             <Button variant="outline">
-                                <Download className="h-4 w-4 mr-2" />
+                                <Download className="mr-2 h-4 w-4" />
                                 Export
                             </Button>
                             <Button variant="outline">
-                                <Upload className="h-4 w-4 mr-2" />
+                                <Upload className="mr-2 h-4 w-4" />
                                 Import
                             </Button>
                             <Button asChild>
                                 <Link href={route('projects.create')}>
-                                    <Plus className="h-4 w-4 mr-2" />
+                                    <Plus className="mr-2 h-4 w-4" />
                                     Add Project
                                 </Link>
                             </Button>
                         </div>
                     </div>
 
-                    {/* Stats Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
-                                <Building className="h-4 w-4 text-muted-foreground" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{filteredProjects.length}</div>
-                                <p className="text-xs text-muted-foreground">Active portfolio</p>
-                            </CardContent>
-                        </Card>
-                        
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">In Progress</CardTitle>
-                                <Hammer className="h-4 w-4 text-muted-foreground" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">
-                                    {filteredProjects.filter(p => p.status === "in progress").length}
-                                </div>
-                                <p className="text-xs text-muted-foreground">Currently active</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
-                                <DollarSign className="h-4 w-4 text-muted-foreground" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">${filteredProjects.reduce((total, project) => total + (project.budget || 0), 0).toLocaleString()}</div>
-                                <p className="text-xs text-muted-foreground">Combined value</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Team Members</CardTitle>
-                                <Users className="h-4 w-4 text-muted-foreground" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">
-                                    {filteredProjects.reduce((total, project) => total + (project.team_size || 0), 0)}
-                                </div>
-                                <p className="text-xs text-muted-foreground">Total workforce</p>
-                            </CardContent>
-                        </Card>
-                    </div>
-
                     {/* Filters and Search */}
-                    <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                    <div className="mb-6 flex flex-col gap-4 sm:flex-row">
                         <div className="relative flex-1">
-                            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                            <Search className="absolute top-3 left-3 h-4 w-4 text-muted-foreground" />
                             <Input
                                 placeholder="Search projects..."
                                 value={searchTerm}
@@ -201,7 +161,7 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                                 className="pl-10"
                             />
                         </div>
-                        <Select value={statusFilter || "all"} onValueChange={(value) => setStatusFilter(value === "all" ? null : value)}>
+                        <Select value={statusFilter || 'all'} onValueChange={(value) => setStatusFilter(value === 'all' ? null : value)}>
                             <SelectTrigger className="w-full sm:w-[200px]">
                                 <SelectValue placeholder="Filter by status" />
                             </SelectTrigger>
@@ -219,9 +179,7 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                     <Card>
                         <CardHeader>
                             <CardTitle>Projects Overview</CardTitle>
-                            <CardDescription>
-                                Manage and track all your construction projects
-                            </CardDescription>
+                            <CardDescription>Manage and track all your construction projects</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Table>
@@ -245,7 +203,7 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                                                     {project.is_featured && <Star className="h-4 w-4 text-yellow-500" />}
                                                     <div>
                                                         <div className="font-medium">{project.title}</div>
-                                                        <div className="text-sm text-muted-foreground flex items-center gap-1">
+                                                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                                             <MapPin className="h-3 w-3" />
                                                             {project.location || 'N/A'}
                                                         </div>
@@ -256,15 +214,13 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                                                 <Badge variant="outline">{project.type}</Badge>
                                             </TableCell>
                                             <TableCell>
-                                                <Badge variant={getStatusVariant(project.status)}>
-                                                    {project.status}
-                                                </Badge>
+                                                <Badge variant={getStatusVariant(project.status)}>{project.status}</Badge>
                                             </TableCell>
                                             <TableCell>${(project.budget || 0).toLocaleString()}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-16 bg-gray-200 rounded-full h-2">
-                                                        <div 
+                                                    <div className="h-2 w-16 rounded-full bg-gray-200">
+                                                        <div
                                                             className={`h-2 rounded-full ${getProgressColor(project.progress)}`}
                                                             style={{ width: `${project.progress || 0}%` }}
                                                         />
@@ -295,11 +251,16 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                         <DropdownMenuItem onClick={() => handleEdit(project)}>
-                                                            <Edit className="mr-2 h-4 w-4" />Edit
+                                                            <Edit className="mr-2 h-4 w-4" />
+                                                            Edit
                                                         </DropdownMenuItem>
                                                         <DropdownMenuSeparator />
-                                                        <DropdownMenuItem onClick={() => handleDelete(project.id)} className="text-destructive focus:text-destructive">
-                                                            <Trash2 className="mr-2 h-4 w-4" />Delete
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleDelete(project.id)}
+                                                            className="text-destructive focus:text-destructive"
+                                                        >
+                                                            <Trash2 className="mr-2 h-4 w-4" />
+                                                            Delete
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -322,8 +283,12 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-                        <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
+                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={confirmDelete}>
+                            Delete
+                        </Button>
                     </div>
                 </DialogContent>
             </Dialog>

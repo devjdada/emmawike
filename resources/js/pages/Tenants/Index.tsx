@@ -1,9 +1,9 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
-import { PageProps } from '@/types';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import AppLayout from '@/layouts/app-layout';
+import { PageProps } from '@/types';
+import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 
 interface Tenant {
@@ -39,9 +39,11 @@ export default function TenantsIndex({ auth, tenants }: TenantsIndexProps) {
         <AppLayout user={auth.user}>
             <Head title="Tenants" />
 
-            <div className="flex justify-between items-center mb-4">
+            <div className="mb-4 flex items-center justify-between">
                 <h1 className="text-2xl font-semibold">Tenants</h1>
-                <Button asChild><Link href={route('tenants.create')}>Add New Tenant</Link></Button>
+                <Button asChild>
+                    <Link href={route('tenants.create')}>Add New Tenant</Link>
+                </Button>
             </div>
 
             <Table>
@@ -62,8 +64,12 @@ export default function TenantsIndex({ auth, tenants }: TenantsIndexProps) {
                             <TableCell>{tenant.start_date}</TableCell>
                             <TableCell>{tenant.end_date || 'N/A'}</TableCell>
                             <TableCell>
-                                <Button variant="outline" size="sm" className="mr-2">Edit</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(tenant)}>Delete</Button>
+                                <Button variant="outline" size="sm" className="mr-2">
+                                    Edit
+                                </Button>
+                                <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(tenant)}>
+                                    Delete
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -79,8 +85,12 @@ export default function TenantsIndex({ auth, tenants }: TenantsIndexProps) {
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-                        <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
+                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={confirmDelete}>
+                            Delete
+                        </Button>
                     </div>
                 </DialogContent>
             </Dialog>

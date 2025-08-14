@@ -1,9 +1,9 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
-import { PageProps } from '@/types';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import AppLayout from '@/layouts/app-layout';
+import { PageProps } from '@/types';
+import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 
 interface User {
@@ -38,9 +38,11 @@ export default function UsersIndex({ auth, users }: UsersIndexProps) {
         <AppLayout user={auth.user}>
             <Head title="Users" />
 
-            <div className="flex justify-between items-center mb-4">
+            <div className="mb-4 flex items-center justify-between">
                 <h1 className="text-2xl font-semibold">Users</h1>
-                <Button asChild><Link href={route('users.create')}>Add New User</Link></Button>
+                <Button asChild>
+                    <Link href={route('users.create')}>Add New User</Link>
+                </Button>
             </div>
 
             <Table>
@@ -59,8 +61,12 @@ export default function UsersIndex({ auth, users }: UsersIndexProps) {
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>
                             <TableCell>
-                                <Button variant="outline" size="sm" className="mr-2">Edit</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(user)}>Delete</Button>
+                                <Button variant="outline" size="sm" className="mr-2">
+                                    Edit
+                                </Button>
+                                <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(user)}>
+                                    Delete
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -76,8 +82,12 @@ export default function UsersIndex({ auth, users }: UsersIndexProps) {
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-                        <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
+                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={confirmDelete}>
+                            Delete
+                        </Button>
                     </div>
                 </DialogContent>
             </Dialog>

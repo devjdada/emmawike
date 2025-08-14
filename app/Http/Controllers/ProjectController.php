@@ -10,7 +10,7 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Project::all();
+        $projects = Project::orderBy('date_added', 'desc')->get();
         return Inertia::render('Projects/Index', [
             'projects' => $projects,
         ]);
@@ -18,7 +18,7 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return Inertia::render('Projects/Create');
+        return Inertia::render('Projects/ProjectForm');
     }
 
     public function store(Request $request)
@@ -31,7 +31,7 @@ class ProjectController extends Controller
             'status' => 'required|string',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'image_url' => 'nullable|url',
+            
             'budget' => 'nullable|numeric',
             'location' => 'nullable|string',
             'team_size' => 'nullable|integer',
@@ -47,7 +47,7 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
-        return Inertia::render('Projects/Edit', [
+        return Inertia::render('Projects/ProjectForm', [
             'project' => $project,
         ]);
     }
@@ -62,7 +62,7 @@ class ProjectController extends Controller
             'status' => 'sometimes|required|string',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'image_url' => 'nullable|url',
+            
             'budget' => 'nullable|numeric',
             'location' => 'nullable|string',
             'team_size' => 'nullable|integer',

@@ -1,11 +1,11 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, useForm } from '@inertiajs/react';
-import { PageProps } from '@/types';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import InputError from '@/components/input-error';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import AppLayout from '@/layouts/app-layout';
+import { PageProps } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
 
 interface User {
     id: number;
@@ -34,8 +34,8 @@ export default function EditUser({ auth, user }: EditUserProps) {
         <AppLayout user={auth.user}>
             <Head title="Edit User" />
 
-            <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-                <h1 className="text-2xl font-semibold mb-6">Edit User</h1>
+            <div className="mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
+                <h1 className="mb-6 text-2xl font-semibold">Edit User</h1>
 
                 <form onSubmit={submit} className="space-y-6">
                     <div>
@@ -85,7 +85,9 @@ export default function EditUser({ auth, user }: EditUserProps) {
                         <InputError message={errors.role} className="mt-2" />
                     </div>
 
-                    <Button type="submit" disabled={processing}>Update User</Button>
+                    <Button type="submit" disabled={processing}>
+                        Update User
+                    </Button>
                 </form>
             </div>
         </AppLayout>

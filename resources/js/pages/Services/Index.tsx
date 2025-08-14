@@ -1,9 +1,9 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
-import { PageProps } from '@/types';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import AppLayout from '@/layouts/app-layout';
+import { PageProps } from '@/types';
+import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 
 interface Service {
@@ -38,9 +38,11 @@ export default function ServicesIndex({ auth, services }: ServicesIndexProps) {
         <AppLayout user={auth.user}>
             <Head title="Services" />
 
-            <div className="flex justify-between items-center mb-4">
+            <div className="mb-4 flex items-center justify-between">
                 <h1 className="text-2xl font-semibold">Services</h1>
-                <Button asChild><Link href={route('services.create')}>Add New Service</Link></Button>
+                <Button asChild>
+                    <Link href={route('services.create')}>Add New Service</Link>
+                </Button>
             </div>
 
             <Table>
@@ -59,8 +61,12 @@ export default function ServicesIndex({ auth, services }: ServicesIndexProps) {
                             <TableCell>{service.description}</TableCell>
                             <TableCell>${service.price.toLocaleString()}</TableCell>
                             <TableCell>
-                                <Button variant="outline" size="sm" className="mr-2">Edit</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(service)}>Delete</Button>
+                                <Button variant="outline" size="sm" className="mr-2">
+                                    Edit
+                                </Button>
+                                <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(service)}>
+                                    Delete
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -76,8 +82,12 @@ export default function ServicesIndex({ auth, services }: ServicesIndexProps) {
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-                        <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
+                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={confirmDelete}>
+                            Delete
+                        </Button>
                     </div>
                 </DialogContent>
             </Dialog>

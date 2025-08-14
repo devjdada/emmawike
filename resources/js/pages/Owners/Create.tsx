@@ -1,10 +1,10 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, useForm } from '@inertiajs/react';
-import { PageProps } from '@/types';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import InputError from '@/components/input-error';
+import AppLayout from '@/layouts/app-layout';
+import { PageProps } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
 
 export default function CreateOwner({ auth }: PageProps) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -20,8 +20,8 @@ export default function CreateOwner({ auth }: PageProps) {
         <AppLayout user={auth.user}>
             <Head title="Create Owner" />
 
-            <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-                <h1 className="text-2xl font-semibold mb-6">Create New Owner</h1>
+            <div className="mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
+                <h1 className="mb-6 text-2xl font-semibold">Create New Owner</h1>
 
                 <form onSubmit={submit} className="space-y-6">
                     <div>
@@ -38,7 +38,9 @@ export default function CreateOwner({ auth }: PageProps) {
                         <InputError message={errors.user_id} className="mt-2" />
                     </div>
 
-                    <Button type="submit" disabled={processing}>Create Owner</Button>
+                    <Button type="submit" disabled={processing}>
+                        Create Owner
+                    </Button>
                 </form>
             </div>
         </AppLayout>

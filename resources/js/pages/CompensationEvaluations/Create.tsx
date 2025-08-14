@@ -1,14 +1,14 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, useForm } from '@inertiajs/react';
-import { PageProps } from '@/types';
+import InputError from '@/components/input-error';
+import SimpleEditor from '@/components/SimpleEditor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import InputError from '@/components/input-error';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import SimpleEditor from '@/components/SimpleEditor';
 import { useToast } from '@/hooks/use-toast';
-import { useState, useEffect } from 'react';
+import AppLayout from '@/layouts/app-layout';
+import { PageProps } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 
 interface CompensationEvaluation {
     id: number;
@@ -70,10 +70,10 @@ export default function EditCompensationEvaluation({ auth, evaluation: initialEv
         e.preventDefault();
         put(route('compensation-evaluations.update', initialEvaluation.id), {
             onSuccess: () => {
-                toast({ title: "Evaluation Updated", description: "The compensation evaluation has been successfully updated." });
+                toast({ title: 'Evaluation Updated', description: 'The compensation evaluation has been successfully updated.' });
             },
             onError: () => {
-                toast({ title: "Error", description: "Failed to update evaluation.", variant: "destructive" });
+                toast({ title: 'Error', description: 'Failed to update evaluation.', variant: 'destructive' });
             },
         });
     };
@@ -82,40 +82,75 @@ export default function EditCompensationEvaluation({ auth, evaluation: initialEv
         switch (evaluationType) {
             case 'crop':
                 return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                             <Label htmlFor="crop_type">Crop Type</Label>
-                            <Input id="crop_type" type="text" value={data.crop_type} onChange={(e) => setData('crop_type', e.target.value)} required />
+                            <Input
+                                id="crop_type"
+                                type="text"
+                                value={data.crop_type}
+                                onChange={(e) => setData('crop_type', e.target.value)}
+                                required
+                            />
                             <InputError message={errors.crop_type} className="mt-2" />
                         </div>
                         <div>
                             <Label htmlFor="area_acres">Area (Acres)</Label>
-                            <Input id="area_acres" type="number" value={data.area_acres} onChange={(e) => setData('area_acres', parseFloat(e.target.value))} required />
+                            <Input
+                                id="area_acres"
+                                type="number"
+                                value={data.area_acres}
+                                onChange={(e) => setData('area_acres', parseFloat(e.target.value))}
+                                required
+                            />
                             <InputError message={errors.area_acres} className="mt-2" />
                         </div>
                         <div>
                             <Label htmlFor="yield_per_acre">Yield Per Acre</Label>
-                            <Input id="yield_per_acre" type="number" value={data.yield_per_acre} onChange={(e) => setData('yield_per_acre', parseFloat(e.target.value))} required />
+                            <Input
+                                id="yield_per_acre"
+                                type="number"
+                                value={data.yield_per_acre}
+                                onChange={(e) => setData('yield_per_acre', parseFloat(e.target.value))}
+                                required
+                            />
                             <InputError message={errors.yield_per_acre} className="mt-2" />
                         </div>
                         <div>
                             <Label htmlFor="market_price_per_unit">Market Price Per Unit</Label>
-                            <Input id="market_price_per_unit" type="number" value={data.market_price_per_unit} onChange={(e) => setData('market_price_per_unit', parseFloat(e.target.value))} required />
+                            <Input
+                                id="market_price_per_unit"
+                                type="number"
+                                value={data.market_price_per_unit}
+                                onChange={(e) => setData('market_price_per_unit', parseFloat(e.target.value))}
+                                required
+                            />
                             <InputError message={errors.market_price_per_unit} className="mt-2" />
                         </div>
                         <div>
                             <Label htmlFor="damage_percentage">Damage Percentage (%)</Label>
-                            <Input id="damage_percentage" type="number" value={data.damage_percentage} onChange={(e) => setData('damage_percentage', parseFloat(e.target.value))} />
+                            <Input
+                                id="damage_percentage"
+                                type="number"
+                                value={data.damage_percentage}
+                                onChange={(e) => setData('damage_percentage', parseFloat(e.target.value))}
+                            />
                             <InputError message={errors.damage_percentage} className="mt-2" />
                         </div>
                     </div>
                 );
             case 'machine':
                 return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                             <Label htmlFor="machine_type">Machine Type</Label>
-                            <Input id="machine_type" type="text" value={data.machine_type} onChange={(e) => setData('machine_type', e.target.value)} required />
+                            <Input
+                                id="machine_type"
+                                type="text"
+                                value={data.machine_type}
+                                onChange={(e) => setData('machine_type', e.target.value)}
+                                required
+                            />
                             <InputError message={errors.machine_type} className="mt-2" />
                         </div>
                         <div>
@@ -151,14 +186,20 @@ export default function EditCompensationEvaluation({ auth, evaluation: initialEv
                         </div>
                         <div>
                             <Label htmlFor="depreciation_rate">Depreciation Rate (%)</Label>
-                            <Input id="depreciation_rate" type="number" value={data.depreciation_rate} onChange={(e) => setData('depreciation_rate', parseFloat(e.target.value))} required />
+                            <Input
+                                id="depreciation_rate"
+                                type="number"
+                                value={data.depreciation_rate}
+                                onChange={(e) => setData('depreciation_rate', parseFloat(e.target.value))}
+                                required
+                            />
                             <InputError message={errors.depreciation_rate} className="mt-2" />
                         </div>
                     </div>
                 );
             case 'land':
                 return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                             <Label htmlFor="land_use_type">Land Use Type</Label>
                             <Select onValueChange={(value) => setData('land_use_type', value)} value={data.land_use_type}>
@@ -176,32 +217,59 @@ export default function EditCompensationEvaluation({ auth, evaluation: initialEv
                         </div>
                         <div>
                             <Label htmlFor="area_sqft">Area (Sq. Ft.)</Label>
-                            <Input id="area_sqft" type="number" value={data.area_sqft} onChange={(e) => setData('area_sqft', parseFloat(e.target.value))} required />
+                            <Input
+                                id="area_sqft"
+                                type="number"
+                                value={data.area_sqft}
+                                onChange={(e) => setData('area_sqft', parseFloat(e.target.value))}
+                                required
+                            />
                             <InputError message={errors.area_sqft} className="mt-2" />
                         </div>
                         <div>
                             <Label htmlFor="location_description">Location Description</Label>
-                            <Input id="location_description" type="text" value={data.location_description} onChange={(e) => setData('location_description', e.target.value)} required />
+                            <Input
+                                id="location_description"
+                                type="text"
+                                value={data.location_description}
+                                onChange={(e) => setData('location_description', e.target.value)}
+                                required
+                            />
                             <InputError message={errors.location_description} className="mt-2" />
                         </div>
                         <div>
                             <Label htmlFor="zoning_regulations">Zoning Regulations</Label>
-                            <Input id="zoning_regulations" type="text" value={data.zoning_regulations} onChange={(e) => setData('zoning_regulations', e.target.value)} />
+                            <Input
+                                id="zoning_regulations"
+                                type="text"
+                                value={data.zoning_regulations}
+                                onChange={(e) => setData('zoning_regulations', e.target.value)}
+                            />
                             <InputError message={errors.zoning_regulations} className="mt-2" />
                         </div>
                         <div>
                             <Label htmlFor="soil_quality">Soil Quality</Label>
-                            <Input id="soil_quality" type="text" value={data.soil_quality} onChange={(e) => setData('soil_quality', e.target.value)} />
+                            <Input
+                                id="soil_quality"
+                                type="text"
+                                value={data.soil_quality}
+                                onChange={(e) => setData('soil_quality', e.target.value)}
+                            />
                             <InputError message={errors.soil_quality} className="mt-2" />
                         </div>
                     </div>
                 );
             case 'property':
                 return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                             <Label htmlFor="property_id">Property ID (Optional)</Label>
-                            <Input id="property_id" type="number" value={data.property_id} onChange={(e) => setData('property_id', parseInt(e.target.value))} />
+                            <Input
+                                id="property_id"
+                                type="number"
+                                value={data.property_id}
+                                onChange={(e) => setData('property_id', parseInt(e.target.value))}
+                            />
                             <InputError message={errors.property_id} className="mt-2" />
                         </div>
                         <div>
@@ -220,12 +288,23 @@ export default function EditCompensationEvaluation({ auth, evaluation: initialEv
                         </div>
                         <div>
                             <Label htmlFor="number_of_units">Number of Units</Label>
-                            <Input id="number_of_units" type="number" value={data.number_of_units} onChange={(e) => setData('number_of_units', parseInt(e.target.value))} />
+                            <Input
+                                id="number_of_units"
+                                type="number"
+                                value={data.number_of_units}
+                                onChange={(e) => setData('number_of_units', parseInt(e.target.value))}
+                            />
                             <InputError message={errors.number_of_units} className="mt-2" />
                         </div>
                         <div>
                             <Label htmlFor="construction_year">Construction Year</Label>
-                            <Input id="construction_year" type="number" value={data.construction_year} onChange={(e) => setData('construction_year', parseInt(e.target.value))} required />
+                            <Input
+                                id="construction_year"
+                                type="number"
+                                value={data.construction_year}
+                                onChange={(e) => setData('construction_year', parseInt(e.target.value))}
+                                required
+                            />
                             <InputError message={errors.construction_year} className="mt-2" />
                         </div>
                         <div>
@@ -246,7 +325,12 @@ export default function EditCompensationEvaluation({ auth, evaluation: initialEv
                         </div>
                         <div>
                             <Label htmlFor="renovation_cost">Renovation Cost</Label>
-                            <Input id="renovation_cost" type="number" value={data.renovation_cost} onChange={(e) => setData('renovation_cost', parseFloat(e.target.value))} />
+                            <Input
+                                id="renovation_cost"
+                                type="number"
+                                value={data.renovation_cost}
+                                onChange={(e) => setData('renovation_cost', parseFloat(e.target.value))}
+                            />
                             <InputError message={errors.renovation_cost} className="mt-2" />
                         </div>
                     </div>
@@ -260,8 +344,8 @@ export default function EditCompensationEvaluation({ auth, evaluation: initialEv
         <AppLayout user={auth.user}>
             <Head title="Create Compensation Evaluation" />
 
-            <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-                <h1 className="text-2xl font-semibold mb-6">Create New Compensation Evaluation</h1>
+            <div className="mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
+                <h1 className="mb-6 text-2xl font-semibold">Create New Compensation Evaluation</h1>
 
                 <form onSubmit={submit} className="space-y-6">
                     <div>
@@ -286,15 +370,17 @@ export default function EditCompensationEvaluation({ auth, evaluation: initialEv
                         <>
                             <div>
                                 <Label htmlFor="total_value">Total Value</Label>
-                                <Input id="total_value" type="number" value={data.total_value} onChange={(e) => setData('total_value', parseFloat(e.target.value))} />
+                                <Input
+                                    id="total_value"
+                                    type="number"
+                                    value={data.total_value}
+                                    onChange={(e) => setData('total_value', parseFloat(e.target.value))}
+                                />
                                 <InputError message={errors.total_value} className="mt-2" />
                             </div>
                             <div>
                                 <Label htmlFor="notes">Notes</Label>
-                                <SimpleEditor
-                                    content={data.notes}
-                                    onChange={(newContent) => setData('notes', newContent)}
-                                />
+                                <SimpleEditor content={data.notes} onChange={(newContent) => setData('notes', newContent)} />
                                 <InputError message={errors.notes} className="mt-2" />
                             </div>
                             <div>
@@ -312,7 +398,9 @@ export default function EditCompensationEvaluation({ auth, evaluation: initialEv
                                 </Select>
                                 <InputError message={errors.status} className="mt-2" />
                             </div>
-                            <Button type="submit" disabled={processing}>Create Evaluation</Button>
+                            <Button type="submit" disabled={processing}>
+                                Create Evaluation
+                            </Button>
                         </>
                     )}
                 </form>

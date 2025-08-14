@@ -1,14 +1,13 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { PageProps } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useState } from 'react';
-import { ArrowLeft, Plus, Edit, Trash2, Eye, Search, Filter, Download, Upload } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
+import AppLayout from '@/layouts/app-layout';
+import { PageProps } from '@/types';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, Download, Edit, Plus, Search, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface CompensationEvaluation {
     id: number;
@@ -31,28 +30,29 @@ interface CompensationEvaluationsIndexProps extends PageProps {
 
 export default function CompensationEvaluationsIndex({ auth, evaluations: initialEvaluations }: CompensationEvaluationsIndexProps) {
     const { toast } = useToast();
-    const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("all");
-    const [typeFilter, setTypeFilter] = useState("all");
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [typeFilter, setTypeFilter] = useState('all');
 
     const { delete: inertiaDelete } = useForm();
 
-    const filteredEvaluations = initialEvaluations.filter(evaluation => {
-        const matchesSearch = evaluation.evaluation_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              (evaluation.notes && evaluation.notes.toLowerCase().includes(searchTerm.toLowerCase()));
-        const matchesStatus = statusFilter === "all" || evaluation.status.toLowerCase() === statusFilter.toLowerCase();
-        const matchesType = typeFilter === "all" || evaluation.evaluation_type.toLowerCase() === typeFilter.toLowerCase();
+    const filteredEvaluations = initialEvaluations.filter((evaluation) => {
+        const matchesSearch =
+            evaluation.evaluation_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (evaluation.notes && evaluation.notes.toLowerCase().includes(searchTerm.toLowerCase()));
+        const matchesStatus = statusFilter === 'all' || evaluation.status.toLowerCase() === statusFilter.toLowerCase();
+        const matchesType = typeFilter === 'all' || evaluation.evaluation_type.toLowerCase() === typeFilter.toLowerCase();
         return matchesSearch && matchesStatus && matchesType;
     });
 
     const handleDelete = (id: number) => {
-        if (confirm("Are you sure you want to delete this compensation evaluation?")) {
+        if (confirm('Are you sure you want to delete this compensation evaluation?')) {
             inertiaDelete(route('compensation-evaluations.destroy', id), {
                 onSuccess: () => {
-                    toast({ title: "Evaluation Deleted", description: "The compensation evaluation has been removed." });
+                    toast({ title: 'Evaluation Deleted', description: 'The compensation evaluation has been removed.' });
                 },
                 onError: () => {
-                    toast({ title: "Error", description: "Failed to delete evaluation.", variant: "destructive" });
+                    toast({ title: 'Error', description: 'Failed to delete evaluation.', variant: 'destructive' });
                 },
             });
         }
@@ -60,11 +60,16 @@ export default function CompensationEvaluationsIndex({ auth, evaluations: initia
 
     const getStatusVariant = (status: string) => {
         switch (status) {
-            case "approved": return "default";
-            case "pending": return "secondary";
-            case "rejected": return "destructive";
-            case "draft": return "outline";
-            default: return "secondary";
+            case 'approved':
+                return 'default';
+            case 'pending':
+                return 'secondary';
+            case 'rejected':
+                return 'destructive';
+            case 'draft':
+                return 'outline';
+            default:
+                return 'secondary';
         }
     };
 
@@ -73,13 +78,13 @@ export default function CompensationEvaluationsIndex({ auth, evaluations: initia
             <Head title="Compensation Evaluations" />
 
             <div className="pt-24 pb-8">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-8">
+                    <div className="mb-8 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <Link href="/dashboard">
                                 <Button variant="ghost" size="sm">
-                                    <ArrowLeft className="h-4 w-4 mr-2" />
+                                    <ArrowLeft className="mr-2 h-4 w-4" />
                                     Back to Dashboard
                                 </Button>
                             </Link>
@@ -90,12 +95,12 @@ export default function CompensationEvaluationsIndex({ auth, evaluations: initia
                         </div>
                         <div className="flex items-center gap-2">
                             <Button variant="outline">
-                                <Download className="h-4 w-4 mr-2" />
+                                <Download className="mr-2 h-4 w-4" />
                                 Export
                             </Button>
                             <Button asChild>
                                 <Link href={route('compensation-evaluations.create')}>
-                                    <Plus className="h-4 w-4 mr-2" />
+                                    <Plus className="mr-2 h-4 w-4" />
                                     New Evaluation
                                 </Link>
                             </Button>
@@ -105,9 +110,9 @@ export default function CompensationEvaluationsIndex({ auth, evaluations: initia
                     {/* Filters */}
                     <div className="mb-6">
                         <div className="p-4">
-                            <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="flex flex-col gap-4 sm:flex-row">
                                 <div className="relative flex-1">
-                                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                    <Search className="absolute top-3 left-3 h-4 w-4 text-muted-foreground" />
                                     <Input
                                         placeholder="Search evaluations..."
                                         value={searchTerm}
@@ -166,28 +171,18 @@ export default function CompensationEvaluationsIndex({ auth, evaluations: initia
                                             <TableCell>{evaluation.id}</TableCell>
                                             <TableCell>{evaluation.evaluation_type}</TableCell>
                                             <TableCell>
-                                                <Badge variant={getStatusVariant(evaluation.status)}>
-                                                    {evaluation.status}
-                                                </Badge>
+                                                <Badge variant={getStatusVariant(evaluation.status)}>{evaluation.status}</Badge>
                                             </TableCell>
                                             <TableCell>${evaluation.total_value?.toLocaleString() || 'N/A'}</TableCell>
                                             <TableCell>{new Date(evaluation.created_at).toLocaleDateString()}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-2">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        asChild
-                                                    >
+                                                    <Button variant="outline" size="sm" asChild>
                                                         <Link href={route('compensation-evaluations.edit', evaluation.id)}>
                                                             <Edit className="h-4 w-4" />
                                                         </Link>
                                                     </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() => handleDelete(evaluation.id)}
-                                                    >
+                                                    <Button variant="outline" size="sm" onClick={() => handleDelete(evaluation.id)}>
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
                                                 </div>

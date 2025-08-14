@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('projects/create', [ProjectController::class, 'create'])->name('projects.create');
     Route::get('projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+    Route::post('projects', [ProjectController::class, 'store'])->name('projects.store')->middleware('can:is_admin');
 
     Route::get('tenants', [TenantController::class, 'index'])->name('tenants.index');
     Route::get('tenants/create', [TenantController::class, 'create'])->name('tenants.create');
@@ -63,5 +64,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('rent-agreements/{rent_agreement}/edit', [RentAgreementController::class, 'edit'])->name('rent-agreements.edit');
 });
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';

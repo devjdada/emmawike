@@ -1,4 +1,4 @@
-import { useEditor, EditorContent } from '@tiptap/react';
+import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import React from 'react';
 
@@ -9,9 +9,7 @@ interface SimpleEditorProps {
 
 const SimpleEditor: React.FC<SimpleEditorProps> = ({ content, onChange }) => {
     const editor = useEditor({
-        extensions: [
-            StarterKit,
-        ],
+        extensions: [StarterKit],
         content: content,
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML());
@@ -19,7 +17,7 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({ content, onChange }) => {
     });
 
     return (
-        <div className="border rounded-md min-h-[150px]">
+        <div className="min-h-[150px] rounded-md border">
             <EditorContent editor={editor} />
         </div>
     );

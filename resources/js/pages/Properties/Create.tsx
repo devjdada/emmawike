@@ -1,13 +1,13 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, useForm } from '@inertiajs/react';
-import { PageProps } from '@/types';
+import InputError from '@/components/input-error';
+import SimpleEditor from '@/components/SimpleEditor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import InputError from '@/components/input-error';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import SimpleEditor from '@/components/SimpleEditor';
 import { useToast } from '@/hooks/use-toast';
+import AppLayout from '@/layouts/app-layout';
+import { PageProps } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
 
 export default function CreateProperty({ auth }: PageProps) {
     const { toast } = useToast();
@@ -44,11 +44,11 @@ export default function CreateProperty({ auth }: PageProps) {
         e.preventDefault();
         post(route('properties.store'), {
             onSuccess: () => {
-                toast({ title: "Property Added", description: "The property has been successfully added to the listings." });
+                toast({ title: 'Property Added', description: 'The property has been successfully added to the listings.' });
                 reset();
             },
             onError: () => {
-                toast({ title: "Error", description: "Failed to add property.", variant: "destructive" });
+                toast({ title: 'Error', description: 'Failed to add property.', variant: 'destructive' });
             },
         });
     };
@@ -57,11 +57,11 @@ export default function CreateProperty({ auth }: PageProps) {
         <AppLayout user={auth.user}>
             <Head title="Create Property" />
 
-            <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-                <h1 className="text-2xl font-semibold mb-6">Create New Property</h1>
+            <div className="mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
+                <h1 className="mb-6 text-2xl font-semibold">Create New Property</h1>
 
                 <form onSubmit={submit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                             <Label htmlFor="title">Property Title</Label>
                             <Input
@@ -300,24 +300,13 @@ export default function CreateProperty({ auth }: PageProps) {
 
                     <div>
                         <Label htmlFor="media">Property Media (Images/Videos)</Label>
-                        <Input
-                            id="media"
-                            type="file"
-                            name="media"
-                            className="mt-1 block w-full"
-                            onChange={handleFileChange}
-                            multiple
-                            required
-                        />
+                        <Input id="media" type="file" name="media" className="mt-1 block w-full" onChange={handleFileChange} multiple required />
                         <InputError message={errors.media} className="mt-2" />
                     </div>
 
                     <div>
                         <Label htmlFor="description">Description</Label>
-                        <SimpleEditor
-                            content={data.description}
-                            onChange={(newContent) => setData('description', newContent)}
-                        />
+                        <SimpleEditor content={data.description} onChange={(newContent) => setData('description', newContent)} />
                         <InputError message={errors.description} className="mt-2" />
                     </div>
 
@@ -333,10 +322,11 @@ export default function CreateProperty({ auth }: PageProps) {
                         <InputError message={errors.is_featured} className="mt-2" />
                     </div>
 
-                    <Button type="submit" disabled={processing}>Create Property</Button>
+                    <Button type="submit" disabled={processing}>
+                        Create Property
+                    </Button>
                 </form>
             </div>
         </AppLayout>
     );
 }
-

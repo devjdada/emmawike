@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Property;
@@ -60,7 +61,7 @@ class PropertyController extends Controller
             }
         }
 
-        return redirect()->route('properties.index');
+        return redirect()->route('roperties.index');
     }
 
     public function show(Property $property)

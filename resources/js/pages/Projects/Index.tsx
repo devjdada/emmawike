@@ -50,6 +50,13 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
+    const truncateText = (text: string, maxLength: number) => {
+        if (text.length <= maxLength) {
+            return text;
+        }
+        return text.substring(0, maxLength) + '...';
+    };
+
     const { delete: inertiaDelete } = useForm();
 
     const filteredProjects = initialProjects.filter((project) => {
@@ -254,10 +261,10 @@ export default function ProjectsIndex({ auth, projects: initialProjects }: Proje
                                                 <div className="flex items-center gap-2">
                                                     {project.is_featured && <Star className="h-4 w-4 text-yellow-500" />}
                                                     <div>
-                                                        <div className="font-medium">{project.title}</div>
+                                                        <div className="font-medium">{truncateText(project.title, 30)}</div>
                                                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                                             <MapPin className="h-3 w-3" />
-                                                            {project.location || 'N/A'}
+                                                            {truncateText(project.location || 'N/A', 30)}
                                                         </div>
                                                     </div>
                                                 </div>

@@ -46,6 +46,7 @@ class Property extends Model
         'area_sq_ft',
         'status',
         'is_featured',
+        'views',
     ];
 
     public function media()

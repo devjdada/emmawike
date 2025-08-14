@@ -20,6 +20,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::apiResource('properties', PropertyController::class);
+Route::post('properties/{property}/view', [PropertyController::class, 'incrementViewCount']);
 Route::apiResource('blogs', BlogController::class);
 Route::apiResource('services', ServiceController::class);
 Route::apiResource('projects', ProjectController::class);

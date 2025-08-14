@@ -176,4 +176,10 @@ class PropertyController extends Controller
 
         return redirect()->route('properties.index');
     }
+
+    public function incrementViewCount(Property $property)
+    {
+        $property->increment('views');
+        return response()->json(['message' => 'View count incremented']);
+    }
 }

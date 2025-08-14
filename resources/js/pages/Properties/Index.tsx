@@ -1,7 +1,6 @@
 import MediaUploadModal from '@/components/media-upload-modal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
     DropdownMenu,
@@ -37,9 +36,6 @@ import {
     Trash2,
     Upload,
     View,
-    Home,
-    Eye,
-    TrendingUp,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -258,67 +254,6 @@ export default function PropertiesIndex({ auth, properties: initialProperties }:
                                 </Link>
                             </Button>
                         </div>
-                    </div>
-
-                    {/* Stats Overview */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Total Properties</p>
-                                        <p className="text-3xl font-bold text-foreground">{filteredProperties.length}</p>
-                                    </div>
-                                    <Home className="h-8 w-8 text-primary" />
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-2">All property listings</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Published</p>
-                                        <p className="text-3xl font-bold text-foreground">
-                                            {filteredProperties.filter(p => p.status === "published").length}
-                                        </p>
-                                    </div>
-                                    <Eye className="h-8 w-8 text-green-500" />
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-2">Live on the market</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Total Views</p>
-                                        <p className="text-3xl font-bold text-foreground">
-                                            {filteredProperties.reduce((sum, p) => sum + (p.views || 0), 0).toLocaleString()}
-                                        </p>
-                                    </div>
-                                    <TrendingUp className="h-8 w-8 text-blue-500" />
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-2">Across all properties</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Inquiries</p>
-                                        <p className="text-3xl font-bold text-foreground">
-                                            {filteredProperties.reduce((sum, p) => sum + (p.inquiries || 0), 0)}
-                                        </p>
-                                    </div>
-                                    <DollarSign className="h-8 w-8 text-yellow-500" />
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-2">Total customer interest</p>
-                            </CardContent>
-                        </Card>
                     </div>
 
                     {/* Filters */}

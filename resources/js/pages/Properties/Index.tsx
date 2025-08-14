@@ -42,6 +42,7 @@ import {
     View,
 } from 'lucide-react';
 import { useState } from 'react';
+import { truncateText } from '@/lib/utils';
 
 interface Property {
     id: string;
@@ -392,9 +393,9 @@ export default function PropertiesIndex({ auth, properties: initialProperties }:
                                             <TableCell>
                                                 <div className="flex items-center gap-3">
                                                     <div>
-                                                        <div className="font-medium">{property.title}</div>
+                                                        <div className="font-medium">{truncateText(property.title, 25)}</div>
                                                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                            {property.type}
+                                                            {property.type} • {property.media.length} media
                                                             {property.is_featured && (
                                                                 <Badge variant="secondary" className="text-xs">
                                                                     <Star className="mr-1 h-3 w-3" />

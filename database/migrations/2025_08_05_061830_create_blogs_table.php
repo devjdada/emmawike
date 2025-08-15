@@ -16,8 +16,16 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('content');
-            $table->string('image_url');
+            $table->text('excerpt'); // New field
+            $table->string('author'); // New field
+            $table->string('category'); // New field
+            $table->string('status')->default('draft'); // New field
+            $table->timestamp('published_at')->nullable(); // New field
+            $table->string('featured_image')->nullable(); // Renamed from image_url and made nullable
+            $table->json('tags')->nullable(); // New field
+            $table->integer('read_time')->nullable(); // New field
             $table->timestamps();
+            $table->softDeletes(); // Added soft deletes
         });
     }
 

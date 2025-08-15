@@ -13,10 +13,18 @@ export default function MediaUploadModal({ onUpload }: MediaUploadModalProps) {
     const [files, setFiles] = useState<File[]>([]);
     const [label, setLabel] = useState('property_image');
     const [isOpen, setIsOpen] = useState(false);
+    const [previews, setPreviews] = useState<string[]>([]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setFiles(Array.from(e.target.files));
+            const selectedFiles = Array.from(e.target.files);
+            setFiles(selectedFiles);
+
+            const newPreviews: string[] = [];
+            selectedFiles.forEach(file => {
+                newPreviews.push(URL.createObjectURL(file));
+            });
+            setPreviews(newPreviews);
         }
     };
 
@@ -40,6 +48,19 @@ export default function MediaUploadModal({ onUpload }: MediaUploadModalProps) {
                         <Label htmlFor="media-files">Files</Label>
                         <Input id="media-files" type="file" multiple onChange={handleFileChange} />
                     </div>
+                    {previews.length > 0 && (
+                        <div className="grid grid-cols-2 gap-2">
+                            {previews.map((preview, index) => (
+                                <div key={index} className="relative w-full h-24 bg-gray-100 rounded-md overflow-hidden flex items-center justify-center">
+                                    {files[index].type.startsWith('image') ? (
+                                        <img src={preview} alt="Preview" className="object-cover w-full h-full" />
+                                    ) : (
+                                        <video src={preview} controls className="object-cover w-full h-full" />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <div>
                         <Label htmlFor="media-label">Label</Label>
                         <Select onValueChange={setLabel} defaultValue={label}>

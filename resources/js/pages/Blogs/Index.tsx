@@ -12,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-// Removed Dialog imports
 import {
   Select,
   SelectContent,
@@ -25,6 +24,8 @@ import { Plus, Edit, Trash2, Search, Filter } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AppLayout from "@/layouts/app-layout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { format } from "date-fns"; // Import date-fns for date formatting
+import { truncateText } from "@/lib/utils"; // Import truncateText utility
 
 interface Blog {
   id: string;
@@ -53,12 +54,9 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  // Removed isDialogOpen and editingBlog state
   const { toast } = useToast();
 
-  // Removed useForm hook and related state/functions (data, setData, post, put, reset, handleSubmit, resetForm)
-
-  const { delete: inertiaDelete } = useForm(); // Keep only delete from useForm
+  const { delete: inertiaDelete } = useForm();
 
   const categories = ["Market Analysis", "Buying Guide", "Investment", "Property Management", "Legal"];
 
@@ -72,7 +70,6 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
   });
 
   const handleEdit = (blog: Blog) => {
-    // Navigate to the edit page
     window.location.href = route('blogs.edit', blog.id);
   };
 
@@ -112,7 +109,7 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
             <h1 className="text-3xl font-bold text-foreground">Blog Management</h1>
             <p className="text-muted-foreground">Manage and publish your blog posts</p>
           </div>
-          <Link href={route('blogs.create')}> {/* Changed to Link */}
+          <Link href={route('blogs.create')}>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
               Add Blog Post
@@ -177,9 +174,9 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
                 <TableRow key={blog.id}>
                   <TableCell>
                     <div>
-                      <div className="font-medium">{blog.title}</div>
+                      <div className="font-medium">{truncateText(blog.title, 25)}</div>
                       <div className="text-sm text-muted-foreground truncate max-w-xs">
-                        {blog.excerpt}
+                        {truncateText(blog.excerpt, 30)}
                       </div>
                     </div>
                   </TableCell>
@@ -187,7 +184,7 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
                   <TableCell>{blog.category}</TableCell>
                   <TableCell>{getStatusBadge(blog.status)}</TableCell>
                   <TableCell>
-                    {blog.published_at || "Not published"}
+                    {blog.published_at ? format(new Date(blog.published_at), 'MMM dd, yyyy') : "Not published"}
                   </TableCell>
                   <TableCell>{blog.read_time} min</TableCell>
                   <TableCell>

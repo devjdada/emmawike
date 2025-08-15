@@ -20,12 +20,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Search, Filter } from "lucide-react";
+import { Plus, Edit, Trash2, Search, Filter, BookOpen, Eye, Users, Tag } from "lucide-react"; // Added BookOpen, Eye, Users, Tag
 import { useToast } from "@/hooks/use-toast";
 import AppLayout from "@/layouts/app-layout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { format } from "date-fns"; // Import date-fns for date formatting
 import { truncateText } from "@/lib/utils"; // Import truncateText utility
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Added Card imports
 
 interface Blog {
   id: string;
@@ -115,6 +116,59 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
               Add Blog Post
             </Button>
           </Link>
+        </div>
+
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
+                    <BookOpen className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">{filteredBlogs.length}</div>
+                    <p className="text-xs text-muted-foreground">Total blog posts</p>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Published</CardTitle>
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">
+                        {filteredBlogs.filter(blog => blog.status === "published").length}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Live on the site</p>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Read Time</CardTitle>
+                    <Users className="h-4 w-4 text-muted-foreground" /> {/* Using Users as a placeholder for a "time" icon */}
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">
+                        {filteredBlogs.reduce((sum, blog) => sum + (blog.read_time || 0), 0)} min
+                    </div>
+                    <p className="text-xs text-muted-foreground">Combined reading time</p>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Categories</CardTitle>
+                    <Tag className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">
+                        {new Set(filteredBlogs.map(blog => blog.category)).size}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Unique categories</p>
+                </CardContent>
+            </Card>
         </div>
 
         <div className="bg-card rounded-lg border p-6">

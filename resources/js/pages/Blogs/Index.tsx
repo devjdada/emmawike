@@ -12,13 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+// Removed Dialog imports
 import {
   Select,
   SelectContent,
@@ -29,8 +23,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Search, Filter } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import AppLayout from "@/layouts/app-layout"; // Added AppLayout import
-import { Head, Link, useForm } from "@inertiajs/react"; // Added Inertia imports
+import AppLayout from "@/layouts/app-layout";
+import { Head, Link, useForm } from "@inertiajs/react";
 
 interface Blog {
   id: string;
@@ -40,40 +34,31 @@ interface Blog {
   author: string;
   category: string;
   status: "draft" | "published" | "archived";
-  published_at: string; // Changed from publishedAt
-  created_at: string; // Changed from createdAt
-  updated_at: string; // Changed from updatedAt
-  featured_image?: string; // Changed from featuredImage
+  published_at: string;
+  created_at: string;
+  updated_at: string;
+  featured_image?: string;
   tags: string[];
-  read_time: number; // Changed from readTime
-  user_id: string; // Added user_id
+  read_time: number;
+  user_id: string;
 }
 
-interface BlogsIndexProps { // Simplified props for Index page
-    auth: { user: { id: string; name: string; email: string } }; // Minimal user data
+interface BlogsIndexProps {
+    auth: { user: { id: string; name: string; email: string } };
     blogs: Blog[];
 }
 
 export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProps) {
-  const [blogs, setBlogs] = useState<Blog[]>(initialBlogs); // Use initialBlogs from props
+  const [blogs, setBlogs] = useState<Blog[]>(initialBlogs);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
+  // Removed isDialogOpen and editingBlog state
   const { toast } = useToast();
 
-  const { data, setData, post, put, delete: inertiaDelete, processing, errors, reset } = useForm({
-    title: "",
-    content: "",
-    excerpt: "",
-    author: "",
-    category: "",
-    status: "draft" as Blog["status"],
-    featured_image: "", // Renamed from featuredImage
-    tags: "",
-    user_id: auth.user.id, // Set user_id from auth props
-  });
+  // Removed useForm hook and related state/functions (data, setData, post, put, reset, handleSubmit, resetForm)
+
+  const { delete: inertiaDelete } = useForm(); // Keep only delete from useForm
 
   const categories = ["Market Analysis", "Buying Guide", "Investment", "Property Management", "Legal"];
 
@@ -86,55 +71,9 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
     return matchesSearch && matchesStatus && matchesCategory;
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const blogData = {
-      ...data,
-      tags: data.tags.split(",").map(tag => tag.trim()),
-      read_time: Math.ceil(data.content.split(" ").length / 200),
-      published_at: data.status === "published" ? new Date().toISOString().split("T")[0] : null, // Use null for nullable timestamp
-    };
-
-    if (editingBlog) {
-      put(route('blogs.update', editingBlog.id), blogData, {
-        onSuccess: () => {
-          toast({ title: "Success", description: "Blog updated successfully" });
-          setIsDialogOpen(false);
-          setEditingBlog(null);
-          reset();
-        },
-        onError: () => {
-          toast({ title: "Error", description: "Failed to update blog", variant: "destructive" });
-        }
-      });
-    } else {
-      post(route('blogs.store'), blogData, {
-        onSuccess: () => {
-          toast({ title: "Success", description: "Blog created successfully" });
-          setIsDialogOpen(false);
-          reset();
-        },
-        onError: () => {
-          toast({ title: "Error", description: "Failed to create blog", variant: "destructive" });
-        }
-      });
-    }
-  };
-
   const handleEdit = (blog: Blog) => {
-    setEditingBlog(blog);
-    setFormData({
-      title: blog.title,
-      content: blog.content,
-      excerpt: blog.excerpt,
-      author: blog.author,
-      category: blog.category,
-      status: blog.status,
-      featuredImage: blog.featured_image || "",
-      tags: blog.tags.join(", "),
-    });
-    setIsDialogOpen(true);
+    // Navigate to the edit page
+    window.location.href = route('blogs.edit', blog.id);
   };
 
   const handleDelete = (id: string) => {
@@ -148,12 +87,6 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
         }
       });
     }
-  };
-
-  const resetForm = () => {
-    setEditingBlog(null);
-    setIsDialogOpen(false);
-    reset(); // Reset form data using Inertia's reset
   };
 
   const getStatusBadge = (status: Blog["status"]) => {
@@ -171,7 +104,7 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
   };
 
   return (
-    <AppLayout user={auth.user}> {/* Wrap with AppLayout */}
+    <AppLayout user={auth.user}>
       <Head title="Blog Management" />
       <div className="container mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-8">
@@ -179,139 +112,12 @@ export default function BlogsIndex({ auth, blogs: initialBlogs }: BlogsIndexProp
             <h1 className="text-3xl font-bold text-foreground">Blog Management</h1>
             <p className="text-muted-foreground">Manage and publish your blog posts</p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingBlog(null); setIsDialogOpen(true); }}> {/* Clear editingBlog on Add */}
-                <Plus className="mr-2 h-4 w-4" />
-                Add Blog Post
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingBlog ? "Edit Blog Post" : "Add New Blog Post"}
-                </DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="title">Title</Label>
-                    <Input
-                      id="title"
-                      value={data.title}
-                      onChange={(e) => setData("title", e.target.value)}
-                      required
-                    />
-                    <InputError message={errors.title} />
-                  </div>
-                  <div>
-                    <Label htmlFor="author">Author</Label>
-                    <Input
-                      id="author"
-                      value={data.author}
-                      onChange={(e) => setData("author", e.target.value)}
-                      required
-                    />
-                    <InputError message={errors.author} />
-                  </div>
-                </div>
-                
-                <div>
-                  <Label htmlFor="excerpt">Excerpt</Label>
-                  <Textarea
-                    id="excerpt"
-                    value={data.excerpt}
-                    onChange={(e) => setData("excerpt", e.target.value)}
-                    rows={2}
-                    required
-                  />
-                  <InputError message={errors.excerpt} />
-                </div>
-
-                <div>
-                  <Label htmlFor="content">Content</Label>
-                  <Textarea
-                    id="content"
-                    value={data.content}
-                    onChange={(e) => setData("content", e.target.value)}
-                    rows={8}
-                    required
-                  />
-                  <InputError message={errors.content} />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="category">Category</Label>
-                    <Select
-                      value={data.category}
-                      onValueChange={(value) => setData("category", value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <InputError message={errors.category} />
-                  </div>
-                  <div>
-                    <Label htmlFor="status">Status</Label>
-                    <Select
-                      value={data.status}
-                      onValueChange={(value: Blog["status"]) => setData("status", value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="published">Published</SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <InputError message={errors.status} />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="featured_image">Featured Image URL</Label>
-                  <Input
-                    id="featured_image"
-                    value={data.featured_image}
-                    onChange={(e) => setData("featured_image", e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                  />
-                  <InputError message={errors.featured_image} />
-                </div>
-
-                <div>
-                  <Label htmlFor="tags">Tags (comma-separated)</Label>
-                  <Input
-                    id="tags"
-                    value={data.tags}
-                    onChange={(e) => setData("tags", e.target.value)}
-                    placeholder="real estate, tips, guide"
-                  />
-                  <InputError message={errors.tags} />
-                </div>
-
-                <div className="flex justify-end space-x-2">
-                  <Button type="button" variant="outline" onClick={resetForm}>
-                    Cancel
-                  </Button>
-                  <Button type="submit">
-                    {editingBlog ? "Update Blog" : "Create Blog"}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <Link href={route('blogs.create')}> {/* Changed to Link */}
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Blog Post
+            </Button>
+          </Link>
         </div>
 
         <div className="bg-card rounded-lg border p-6">

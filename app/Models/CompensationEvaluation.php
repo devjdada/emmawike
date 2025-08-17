@@ -12,6 +12,15 @@ class CompensationEvaluation extends Model
     public $incrementing = false;
     public $keyType = 'string';
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) \Illuminate\Support\Str::uuid();
+        });
+    }
+
     protected $fillable = [
         'user_id',
         'evaluation_type',

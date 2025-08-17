@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('owners', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('compensation_evaluations', function (Blueprint $table) {
+            $table->foreignUuid('user_id')->after('id')->constrained('users')->onDelete('cascade');
         });
     }
 
@@ -21,8 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('owners', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        Schema::table('compensation_evaluations', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
         });
     }
 };

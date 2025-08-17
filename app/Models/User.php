@@ -100,4 +100,9 @@ class User extends Authenticatable
     {
         return $this->role === 'owner';
     }
+
+    public function compensationEvaluations()
+    {
+        return $this->hasMany(CompensationEvaluation::class);
+    }
 }

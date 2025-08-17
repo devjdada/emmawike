@@ -1,10 +1,14 @@
+
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { PageProps } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, Link, router } from '@inertiajs/react';
+import { useState, useEffect } from 'react';
+import { useDebounce } from '@uidotdev/usehooks';
 
 interface User {
     id: number;
@@ -14,12 +18,30 @@ interface User {
 }
 
 interface UsersIndexProps extends PageProps {
-    users: User[];
+    users: {
+        data: User[];
+        links: { url: string | null; label: string; active: boolean }[];
+    };
+    filters: {
+        search: string;
+        role: string;
+    };
 }
 
-export default function UsersIndex({ auth, users }: UsersIndexProps) {
+export default function UsersIndex({ auth, users, filters }: UsersIndexProps) {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [search, setSearch] = useState(filters.search || '');
+    const [role, setRole] = useState(filters.role || 'all');
+    const debouncedSearch = useDebounce(search, 500);
+
+    useEffect(() => {
+        const params = { search: debouncedSearch, role: role === 'all' ? '' : role };
+        router.get(route('users.index'), params, {
+            preserveState: true,
+            replace: true,
+        });
+    }, [debouncedSearch, role]);
 
     const handleDeleteClick = (user: User) => {
         setSelectedUser(user);
@@ -45,6 +67,27 @@ export default function UsersIndex({ auth, users }: UsersIndexProps) {
                 </Button>
             </div>
 
+            <div className="mb-4 flex items-center space-x-4">
+                <Input
+                    placeholder="Search by name or email..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="max-w-sm"
+                />
+                <Select onValueChange={(value) => setRole(value)} value={role}>
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Filter by role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">All Roles</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="agent">Agent</SelectItem>
+                        <SelectItem value="tenant">Tenant</SelectItem>
+                        <SelectItem value="owner">Owner</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -55,14 +98,14 @@ export default function UsersIndex({ auth, users }: UsersIndexProps) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {users.map((user) => (
+                    {users.data.map((user) => (
                         <TableRow key={user.id}>
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>
                             <TableCell>
-                                <Button variant="outline" size="sm" className="mr-2">
-                                    Edit
+                                <Button variant="outline" size="sm" className="mr-2" asChild>
+                                    <Link href={route('users.edit', user.id)}>Edit</Link>
                                 </Button>
                                 <Button variant="destructive" size="sm" onClick={() => handleDeleteClick(user)}>
                                     Delete
@@ -72,6 +115,22 @@ export default function UsersIndex({ auth, users }: UsersIndexProps) {
                     ))}
                 </TableBody>
             </Table>
+
+            <div className="mt-4 flex justify-center">
+                <div className="flex space-x-2">
+                    {users.links.map((link, index) => (
+                        <Link
+                            key={index}
+                            href={link.url || ''}
+                            className={`px-4 py-2 border rounded ${link.active ? 'bg-blue-500 text-white' : ''} ${!link.url ? 'text-gray-400 cursor-not-allowed' : ''}`}
+                            dangerouslySetInnerHTML={{ __html: link.label }}
+                            as="button"
+                            disabled={!link.url}
+                        />
+                    ))}
+                </div>
+            </div>
+
 
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <DialogContent>
@@ -94,3 +153,4 @@ export default function UsersIndex({ auth, users }: UsersIndexProps) {
         </AppLayout>
     );
 }
+

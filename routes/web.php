@@ -35,7 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('agencies/{agency}/edit', [AgencyController::class, 'edit'])->name('agencies.edit');
 
     Route::get('blogs', [BlogController::class, 'index'])->name('blogs.index');
-    Route::get('blogs/create', [BlogController::class, 'create'])->name('blogs.create');
+    Route::get('blogs/create', function () {
+        return Inertia::render('Blogs/CreatePage'); // Point to the new full page component
+    })->name('blogs.create');
     Route::get('blogs/{blog}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
 
     Route::get('services', [ServiceController::class, 'index'])->name('services.index');
@@ -55,9 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('owners/create', [OwnerController::class, 'create'])->name('owners.create');
     Route::get('owners/{owner}/edit', [OwnerController::class, 'edit'])->name('owners.edit');
 
-    Route::get('compensation-evaluations', [CompensationEvaluationController::class, 'index'])->name('compensation-evaluations.index');
-    Route::get('compensation-evaluations/create', [CompensationEvaluationController::class, 'create'])->name('compensation-evaluations.create');
-    Route::get('compensation-evaluations/{compensation_evaluation}/edit', [CompensationEvaluationController::class, 'edit'])->name('compensation-evaluations.edit');
+    Route::resource('compensation-evaluations', CompensationEvaluationController::class);
 
     Route::get('rent-agreements', [RentAgreementController::class, 'index'])->name('rent-agreements.index');
     Route::get('rent-agreements/create', [RentAgreementController::class, 'create'])->name('rent-agreements.create');

@@ -32,57 +32,57 @@ import AppLogo from "./app-logo";
 const mainNavItems: NavItem[] = [
 	{
 		title: "Dashboard",
-		href: "/dashboard",
+		href: "/admin/dashboard",
 		icon: LayoutGrid,
 	},
 	{
 		title: "Properties",
-		href: "/properties",
+		href: "/admin/properties",
 		icon: Home,
 	},
 	{
 		title: "Projects",
-		href: "/projects",
+		href: "/admin/projects",
 		icon: Briefcase,
 	},
 	{
 		title: "User",
-		href: "/users",
+		href: "/admin/users",
 		icon: Users,
 	},
 	{
 		title: "Agency",
-		href: "/agencies",
+		href: "/admin/agencies",
 		icon: Building2,
 	},
 	{
 		title: "Blogs",
-		href: "/blogs",
+		href: "/admin/blogs",
 		icon: FileText,
 	},
 	{
 		title: "Services",
-		href: "/services",
+		href: "/admin/services",
 		icon: Settings,
 	},
 	{
 		title: "Tenants",
-		href: "/tenants",
+		href: "/admin/tenants",
 		icon: UserSquare2,
 	},
 	{
 		title: "Owners",
-		href: "/owners",
+		href: "/admin/owners",
 		icon: UserCheck,
 	},
 	{
 		title: "Compensation Evaluations",
-		href: "/compensation-evaluations",
+		href: "/admin/compensation-evaluations",
 		icon: ClipboardList,
 	},
 	{
 		title: "Rent Agreements",
-		href: "/rent-agreements",
+		href: "/admin/rent-agreements",
 		icon: FileSignature,
 	},
 ];

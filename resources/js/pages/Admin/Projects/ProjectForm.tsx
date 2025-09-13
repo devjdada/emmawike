@@ -1,19 +1,21 @@
 import { Head, Link, useForm } from "@inertiajs/react";
 import type { FormEventHandler } from "react";
-import InputError from "@/Components/input-error";
-import { Button } from "@/Components/ui/button";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import InputError from "@/components/input-error";
+import SimpleEditor from "@/components/SimpleEditor";
+import Tiptap from "@/components/tiptap";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/Components/ui/select";
-import { Textarea } from "@/Components/ui/textarea";
-import AuthenticatedLayout from "@/Layouts/app-layout";
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import AuthenticatedLayout from "@/layouts/app-layout";
 import type { PageProps } from "@/types";
 
 interface Project {
@@ -223,13 +225,14 @@ export default function ProjectForm({ auth, project }: ProjectFormProps) {
 
 								<div>
 									<Label htmlFor="description">Description</Label>
-									<Textarea
-										id="description"
-										placeholder="Enter a detailed description of the project..."
-										className="min-h-[100px]"
-										value={data.description}
-										onChange={(e) => setData("description", e.target.value)}
+
+									<Tiptap
+										description={data.description}
+										onChange={(newContent) =>
+											setData("description", newContent)
+										}
 									/>
+
 									<InputError message={errors.description} />
 								</div>
 

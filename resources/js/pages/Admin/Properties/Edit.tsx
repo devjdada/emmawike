@@ -2,6 +2,8 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import { ArrowLeft, XCircle } from "lucide-react";
 import { useState } from "react";
 import InputError from "@/components/input-error";
+import TiptapEditor from "@/components/TiptapEditor";
+import Tiptap from "@/components/tiptap";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,7 +16,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import AppLayout from "@/layouts/app-layout";
 import type { PageProps } from "@/types";
@@ -152,7 +153,6 @@ export default function EditProperty({ auth, property }: EditPropertyProps) {
 						<Link href={route("admin.properties.index")}>
 							<Button variant="ghost" size="sm">
 								<ArrowLeft className="mr-2 h-4 w-4" />
-								Back to Properties
 							</Button>
 						</Link>
 						<div>
@@ -176,38 +176,57 @@ export default function EditProperty({ auth, property }: EditPropertyProps) {
 										<Label htmlFor="title">Property Title</Label>
 										<Input
 											id="title"
-											placeholder="Luxury Penthouse..."
+											type="text"
+											name="title"
 											value={data.title}
+											className="mt-1 block w-full"
+											autoComplete="title"
 											onChange={(e) => setData("title", e.target.value)}
+											required
 										/>
-										<InputError message={errors.title} />
+										<InputError message={errors.title} className="mt-2" />
 									</div>
+
 									<div>
 										<Label htmlFor="price">Price</Label>
 										<Input
 											id="price"
 											type="number"
-											placeholder="1500000"
+											name="price"
 											value={data.price}
+											className="mt-1 block w-full"
+											autoComplete="price"
 											onChange={(e) => setData("price", e.target.value)}
+											required
 										/>
-										<InputError message={errors.price} />
+										<InputError message={errors.price} className="mt-2" />
 									</div>
+
 									<div>
-										<Label>Location</Label>
-										<Input
-											placeholder="New York, NY"
-											value={`${data.city}, ${data.state}`}
-											onChange={() => {}}
-										/>
+										<Label htmlFor="currency">Currency</Label>
+										<Select
+											onValueChange={(value) => setData("currency", value)}
+											value={data.currency}
+										>
+											<SelectTrigger className="w-full">
+												<SelectValue placeholder="Select currency" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="NGN">NGN</SelectItem>
+												<SelectItem value="USD">USD</SelectItem>
+												<SelectItem value="EUR">EUR</SelectItem>
+											</SelectContent>
+										</Select>
+										<InputError message={errors.currency} className="mt-2" />
 									</div>
+
 									<div>
-										<Label>Property Type</Label>
+										<Label htmlFor="type">Property Type</Label>
 										<Select
 											onValueChange={(value) => setData("type", value)}
 											value={data.type}
 										>
-											<SelectTrigger>
+											<SelectTrigger className="w-full">
 												<SelectValue placeholder="Select property type" />
 											</SelectTrigger>
 											<SelectContent>
@@ -219,84 +238,206 @@ export default function EditProperty({ auth, property }: EditPropertyProps) {
 												<SelectItem value="Loft">Loft</SelectItem>
 											</SelectContent>
 										</Select>
-										<InputError message={errors.type} />
+										<InputError message={errors.type} className="mt-2" />
 									</div>
+
+									<div>
+										<Label htmlFor="address_line1">Address Line 1</Label>
+										<Input
+											id="address_line1"
+											type="text"
+											name="address_line1"
+											value={data.address_line1}
+											className="mt-1 block w-full"
+											autoComplete="address-line1"
+											onChange={(e) => setData("address_line1", e.target.value)}
+											required
+										/>
+										<InputError
+											message={errors.address_line1}
+											className="mt-2"
+										/>
+									</div>
+
+									<div>
+										<Label htmlFor="address_line2">
+											Address Line 2 (Optional)
+										</Label>
+										<Input
+											id="address_line2"
+											type="text"
+											name="address_line2"
+											value={data.address_line2}
+											className="mt-1 block w-full"
+											autoComplete="address-line2"
+											onChange={(e) => setData("address_line2", e.target.value)}
+										/>
+										<InputError
+											message={errors.address_line2}
+											className="mt-2"
+										/>
+									</div>
+
+									<div>
+										<Label htmlFor="city">City</Label>
+										<Input
+											id="city"
+											type="text"
+											name="city"
+											value={data.city}
+											className="mt-1 block w-full"
+											autoComplete="address-level2"
+											onChange={(e) => setData("city", e.target.value)}
+											required
+										/>
+										<InputError message={errors.city} className="mt-2" />
+									</div>
+
+									<div>
+										<Label htmlFor="state">State</Label>
+										<Input
+											id="state"
+											type="text"
+											name="state"
+											value={data.state}
+											className="mt-1 block w-full"
+											autoComplete="address-level1"
+											onChange={(e) => setData("state", e.target.value)}
+											required
+										/>
+										<InputError message={errors.state} className="mt-2" />
+									</div>
+
+									<div>
+										<Label htmlFor="country">Country</Label>
+										<Input
+											id="country"
+											type="text"
+											name="country"
+											value={data.country}
+											className="mt-1 block w-full"
+											autoComplete="country"
+											onChange={(e) => setData("country", e.target.value)}
+											required
+										/>
+										<InputError message={errors.country} className="mt-2" />
+									</div>
+
+									<div>
+										<Label htmlFor="zip_code">Zip Code (Optional)</Label>
+										<Input
+											id="zip_code"
+											type="text"
+											name="zip_code"
+											value={data.zip_code}
+											className="mt-1 block w-full"
+											autoComplete="postal-code"
+											onChange={(e) => setData("zip_code", e.target.value)}
+										/>
+										<InputError message={errors.zip_code} className="mt-2" />
+									</div>
+
+									<div>
+										<Label htmlFor="latitude">Latitude (Optional)</Label>
+										<Input
+											id="latitude"
+											type="number"
+											name="latitude"
+											value={data.latitude}
+											className="mt-1 block w-full"
+											onChange={(e) => setData("latitude", e.target.value)}
+										/>
+										<InputError message={errors.latitude} className="mt-2" />
+									</div>
+
+									<div>
+										<Label htmlFor="longitude">Longitude (Optional)</Label>
+										<Input
+											id="longitude"
+											type="number"
+											name="longitude"
+											value={data.longitude}
+											className="mt-1 block w-full"
+											onChange={(e) => setData("longitude", e.target.value)}
+										/>
+										<InputError message={errors.longitude} className="mt-2" />
+									</div>
+
 									<div>
 										<Label htmlFor="bedrooms">Bedrooms</Label>
 										<Input
 											id="bedrooms"
 											type="number"
-											placeholder="4"
+											name="bedrooms"
 											value={data.bedrooms}
+											className="mt-1 block w-full"
 											onChange={(e) => setData("bedrooms", e.target.value)}
+											required
 										/>
-										<InputError message={errors.bedrooms} />
+										<InputError message={errors.bedrooms} className="mt-2" />
 									</div>
+
 									<div>
 										<Label htmlFor="bathrooms">Bathrooms</Label>
 										<Input
 											id="bathrooms"
 											type="number"
-											placeholder="3"
+											name="bathrooms"
 											value={data.bathrooms}
+											className="mt-1 block w-full"
 											onChange={(e) => setData("bathrooms", e.target.value)}
+											required
 										/>
-										<InputError message={errors.bathrooms} />
+										<InputError message={errors.bathrooms} className="mt-2" />
 									</div>
+
 									<div>
-										<Label htmlFor="area_sq_ft">Square Footage</Label>
+										<Label htmlFor="area_sq_ft">Area (Sq. Ft.)</Label>
 										<Input
 											id="area_sq_ft"
 											type="number"
-											placeholder="3200"
+											name="area_sq_ft"
 											value={data.area_sq_ft}
+											className="mt-1 block w-full"
 											onChange={(e) => setData("area_sq_ft", e.target.value)}
+											required
 										/>
-										<InputError message={errors.area_sq_ft} />
+										<InputError message={errors.area_sq_ft} className="mt-2" />
 									</div>
+
 									<div>
-										<Label>Status</Label>
+										<Label htmlFor="status">Status</Label>
 										<Select
 											onValueChange={(value) => setData("status", value)}
 											value={data.status}
 										>
-											<SelectTrigger>
+											<SelectTrigger className="w-full">
 												<SelectValue placeholder="Select status" />
 											</SelectTrigger>
 											<SelectContent>
-												<SelectItem value="draft">Draft</SelectItem>
+												<SelectItem value="available">Available</SelectItem>
 												<SelectItem value="published">Published</SelectItem>
+												<SelectItem value="draft">Draft</SelectItem>
 												<SelectItem value="archived">Archived</SelectItem>
 											</SelectContent>
 										</Select>
-										<InputError message={errors.status} />
+										<InputError message={errors.status} className="mt-2" />
 									</div>
 								</div>
 
 								<div>
-									<Label htmlFor="image_url">Image URL</Label>
-									<Input
-										id="image_url"
-										placeholder="https://..."
-										value={data.image_url}
-										onChange={(e) => setData("image_url", e.target.value)}
-									/>
-									<InputError message={errors.image_url} />
-								</div>
-
-								<div>
 									<Label htmlFor="description">Description</Label>
-									<Textarea
-										id="description"
-										placeholder="Enter a detailed description of the property..."
-										className="min-h-[100px]"
-										value={data.description}
-										onChange={(e) => setData("description", e.target.value)}
+
+									<Tiptap
+										onChange={(newContent) =>
+											setData("description", newContent)
+										}
+										description={data.description}
 									/>
-									<InputError message={errors.description} />
+									<InputError message={errors.description} className="mt-2" />
 								</div>
 
-								<div className="flex flex-row items-start space-y-0 space-x-3">
+								<div className="flex items-center space-x-2">
 									<Checkbox
 										id="is_featured"
 										checked={data.is_featured}
@@ -304,14 +445,8 @@ export default function EditProperty({ auth, property }: EditPropertyProps) {
 											setData("is_featured", checked as boolean)
 										}
 									/>
-									<div className="space-y-1 leading-none">
-										<Label htmlFor="is_featured">Featured Property</Label>
-										<p className="text-sm text-muted-foreground">
-											Mark this property as featured to highlight it on the
-											homepage
-										</p>
-									</div>
-									<InputError message={errors.is_featured} />
+									<Label htmlFor="is_featured">Mark as Featured Property</Label>
+									<InputError message={errors.is_featured} className="mt-2" />
 								</div>
 
 								{/* Existing Media Display */}

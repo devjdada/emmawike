@@ -3,6 +3,7 @@ import '../css/nprogress.css';
 
 import { createInertiaApp, router } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import AdminProjectsCreate from '/Users/jdada/Herd/emmawika/resources/js/pages/Admin/Projects/Create.tsx';
 import NProgress from 'nprogress';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
@@ -11,7 +12,12 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
-    resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
+    resolve: (name) => {
+        if (name === 'Admin/Projects/Create') {
+            return AdminProjectsCreate;
+        }
+        return resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx'));
+    },
     setup({ el, App, props }) {
         const root = createRoot(el);
 

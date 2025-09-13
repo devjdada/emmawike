@@ -1,28 +1,34 @@
 <?php
 
+
+
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Public\PropertyController;
+use App\Http\Controllers\Public\BlogController;
+use App\Http\Controllers\Public\ServiceController;
+use App\Http\Controllers\Public\ProjectController;
+use App\Http\Controllers\Public\UserController;
+use App\Http\Controllers\Public\AgencyController;
+use App\Http\Controllers\Public\ContactController;
+use App\Http\Controllers\Public\AboutController; // Added this line
+use App\Http\Controllers\Public\SearchController;
+use App\Http\Controllers\Public\WelcomeController;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
-
-
-
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+Route::get('/', WelcomeController::class)->name('home');
 
 // Public Routes
-Route::get('/properties', [PropertyController::class, 'publicIndex'])->name('public.properties.index');
-Route::get('/properties/{property}', [PropertyController::class, 'publicShow'])->name('public.properties.show');
-Route::get('/blogs', [BlogController::class, 'publicIndex'])->name('public.blogs.index');
-Route::get('/blogs/{blog}', [BlogController::class, 'publicShow'])->name('public.blogs.show');
-Route::get('/services', [ServiceController::class, 'publicIndex'])->name('public.services.index');
-Route::get('/projects', [ProjectController::class, 'publicIndex'])->name('public.projects.index');
-Route::get('/agents', [UserController::class, 'publicIndex'])->name('public.agents.index');
-Route::get('/agencies', [AgencyController::class, 'publicIndex'])->name('public.agencies.index');
-
+Route::get('/properties', [PropertyController::class, 'publicIndex'])->name('properties.index');
+Route::get('/properties/{property}', [PropertyController::class, 'publicShow'])->name('properties.show');
+Route::get('/blogs', [BlogController::class, 'publicIndex'])->name('blogs.index');
+Route::get('/blogs/{blog}', [BlogController::class, 'publicShow'])->name('blogs.show');
+Route::get('/services', [ServiceController::class, 'publicIndex'])->name('services.index');
+Route::get('/projects', [ProjectController::class, 'publicIndex'])->name('projects.index');
+Route::get('/agents', [UserController::class, 'publicIndex'])->name('agents.index');
+Route::get('/agencies', [AgencyController::class, 'publicIndex'])->name('agencies.index');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::get('/about', [AboutController::class, 'index'])->name('about.index'); // Added this line
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 
 require __DIR__ . '/admin.php';

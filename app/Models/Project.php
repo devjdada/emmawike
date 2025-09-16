@@ -22,6 +22,7 @@ class Project extends Model
         'status',
         'start_date',
         'end_date',
+        'image_url',
         'budget',
         'location',
         'is_featured',

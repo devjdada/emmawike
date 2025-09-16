@@ -1,6 +1,7 @@
 import { Head, useForm } from "@inertiajs/react";
 import InputError from "@/components/input-error";
 import TiptapEditor from "@/components/TiptapEditor";
+import Tiptap from "@/components/tiptap";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -71,7 +72,7 @@ export default function CreateProperty({ auth }: PageProps) {
 		<AppLayout user={auth.user}>
 			<Head title="Create Property" />
 
-			<div className="mx-auto bg-red-500 container p-4 sm:p-6 lg:p-8">
+			<div className="mx-auto  container p-4 sm:p-6 lg:p-8">
 				<h1 className="mb-6 text-2xl font-semibold">Create New Property</h1>
 
 				<form onSubmit={submit} className="space-y-6">
@@ -343,8 +344,8 @@ export default function CreateProperty({ auth }: PageProps) {
 
 					<div>
 						<Label htmlFor="description">Description</Label>
-						<TiptapEditor
-							content={data.description}
+						<Tiptap
+							description={data.description}
 							onChange={(newContent) => setData("description", newContent)}
 						/>
 						<InputError message={errors.description} className="mt-2" />

@@ -23,7 +23,9 @@ Route::get('/properties/{property}', [PropertyController::class, 'publicShow'])-
 Route::get('/blogs', [BlogController::class, 'publicIndex'])->name('blogs.index');
 Route::get('/blogs/{blog}', [BlogController::class, 'publicShow'])->name('blogs.show');
 Route::get('/services', [ServiceController::class, 'publicIndex'])->name('services.index');
+Route::get('/services/{service}', [ServiceController::class, 'publicShow'])->name('services.show');
 Route::get('/projects', [ProjectController::class, 'publicIndex'])->name('projects.index');
+Route::get('/projects/{project}', [ProjectController::class, 'publicShow'])->name('projects.show');
 Route::get('/agents', [UserController::class, 'publicIndex'])->name('agents.index');
 Route::get('/agencies', [AgencyController::class, 'publicIndex'])->name('agencies.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');

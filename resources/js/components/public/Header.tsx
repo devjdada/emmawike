@@ -10,6 +10,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import AppearanceToggleTab from "../AppearanceToggleTab";
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -54,11 +55,18 @@ const Navbar = () => {
 								<Link
 									key={item.routeName}
 									href={route(item.routeName)}
-									className={`text-sm font-medium transition-colors hover:text-primary ${
-										url === route(item.routeName)
-											? "text-primary"
-											: "text-foreground"
-									}`}
+									className={`text-sm font-medium transition-colors
+                                        hover:text-primary ${
+																					url === route(item.routeName)
+																						? "text-primary"
+																						: "text-foreground"
+																				}
+                                    dark:hover:text-blue-300 ${
+																			url === route(item.routeName)
+																				? "text-blue-500"
+																				: "text-blue-200"
+																		}
+                                    `}
 								>
 									{item.name}
 								</Link>
@@ -109,6 +117,7 @@ const Navbar = () => {
 								<Phone className="h-4 w-4 mr-2" />
 								Call Us
 							</Button>
+							<AppearanceToggleTab />
 						</div>
 					</div>
 

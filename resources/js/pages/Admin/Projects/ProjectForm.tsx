@@ -1,7 +1,6 @@
 import { Head, Link, useForm } from "@inertiajs/react";
-import type { FormEventHandler } from "react";
+import { type FormEventHandler, useEffect, useState } from "react";
 import InputError from "@/components/input-error";
-import SimpleEditor from "@/components/SimpleEditor";
 import Tiptap from "@/components/tiptap";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -34,6 +33,7 @@ interface Project {
 	progress: number;
 	date_added: string;
 	team_size: number;
+	image: File | null;
 }
 
 interface ProjectFormProps extends PageProps {
@@ -41,34 +41,53 @@ interface ProjectFormProps extends PageProps {
 }
 
 export default function ProjectForm({ auth, project }: ProjectFormProps) {
-	const { data, setData, post, put, processing, errors, reset } = useForm({
-		posted_by_staff_id: project?.posted_by_staff_id || auth.user.id, // Use existing or current user
+	const isEditMode = !!project;
+	const { data, setData, post, processing, errors, reset } = useForm({
+		posted_by_staff_id: project?.posted_by_staff_id || auth.user.id,
 		title: project?.title || "",
 		description: project?.description || "",
 		type: project?.type || "",
 		status: project?.status || "planning",
 		start_date: project?.start_date || "",
 		end_date: project?.end_date || "",
-		image_url: project?.image_url || "",
+		image: null as File | null,
 		budget: project?.budget || 0,
 		location: project?.location || "",
 		is_featured: project?.is_featured || false,
 		progress: project?.progress || 0,
 		date_added: project?.date_added || "",
 		team_size: project?.team_size || 0,
+        ...(isEditMode && { _method: 'PUT' }),
 	});
 
-	const isEditMode = !!project; // Check if project prop exists
+	const [imagePreview, setImagePreview] = useState<string | null>(null);
 
 	const submit: FormEventHandler = (e) => {
 		e.preventDefault();
 
 		if (isEditMode) {
-			put(route("admin.projects.update", project.id));
+			post(route("admin.projects.update", project.id));
 		} else {
 			post(route("admin.projects.store"));
 		}
 	};
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0] || null;
+		setData("image", file);
+		if (file) {
+			const previewUrl = URL.createObjectURL(file);
+			setImagePreview(previewUrl);
+		}
+	};
+
+	useEffect(() => {
+		return () => {
+			if (imagePreview) {
+				URL.revokeObjectURL(imagePreview);
+			}
+		};
+	}, [imagePreview]);
 
 	return (
 		<AuthenticatedLayout
@@ -128,12 +147,12 @@ export default function ProjectForm({ auth, project }: ProjectFormProps) {
 												<SelectValue placeholder="Select project type" />
 											</SelectTrigger>
 											<SelectContent>
-												<SelectItem value="Residential">Residential</SelectItem>
-												<SelectItem value="Commercial">Commercial</SelectItem>
-												<SelectItem value="Mixed Use">Mixed Use</SelectItem>
-												<SelectItem value="Resort">Resort</SelectItem>
-												<SelectItem value="Renovation">Renovation</SelectItem>
-												<SelectItem value="Infrastructure">
+												<SelectItem value="residential">Residential</SelectItem>
+												<SelectItem value="commercial">Commercial</SelectItem>
+												<SelectItem value="mixed_use">Mixed Use</SelectItem>
+												<SelectItem value="Resort">resort</SelectItem>
+												<SelectItem value="renovation">Renovation</SelectItem>
+												<SelectItem value="infrastructure">
 													Infrastructure
 												</SelectItem>
 											</SelectContent>
@@ -213,14 +232,29 @@ export default function ProjectForm({ auth, project }: ProjectFormProps) {
 								</div>
 
 								<div>
-									<Label htmlFor="image_url">Image URL</Label>
-									<Input
-										id="image_url"
-										placeholder="https://..."
-										value={data.image_url}
-										onChange={(e) => setData("image_url", e.target.value)}
-									/>
-									<InputError message={errors.image_url} />
+									<Label htmlFor="image">Project Image</Label>
+									<Input id="image" type="file" onChange={handleFileChange} />
+									<InputError message={errors.image} />
+									{imagePreview && (
+										<div className="mt-4">
+											<p className="text-sm font-medium">Image Preview:</p>
+											<img
+												src={imagePreview}
+												alt="Image preview"
+												className="mt-2 h-20 w-auto rounded"
+											/>
+										</div>
+									)}
+									{project?.image_url && !imagePreview && (
+										<div className="mt-4">
+											<p className="text-sm font-medium">Current Image:</p>
+											<img
+												src={project.image_url}
+												alt="Current project image"
+												className="mt-2 h-20 w-auto rounded"
+											/>
+										</div>
+									)}
 								</div>
 
 								<div>

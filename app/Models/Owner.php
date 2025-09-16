@@ -15,6 +15,7 @@ class Owner extends Model
 
     protected $fillable = [
         'user_id',
+        'property_id',
     ];
 
     public function user()

@@ -37,4 +37,14 @@ class ServiceController extends Controller
             'services' => $services,
         ]);
     }
+
+    public function publicShow(Service $service)
+    {
+        $otherServices = Service::where('id', '!=', $service->id)->inRandomOrder()->limit(3)->get();
+
+        return Inertia::render('Public/Services/Show', [
+            'service' => $service,
+            'otherServices' => $otherServices,
+        ]);
+    }
 }

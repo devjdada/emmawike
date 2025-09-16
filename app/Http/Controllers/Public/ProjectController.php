@@ -86,9 +86,37 @@ class ProjectController extends Controller
 
     public function publicIndex()
     {
-        $projects = Project::where('status', 'published')->orderBy('date_added', 'desc')->get();
+        $projects = Project::orderBy('date_added', 'desc')->get();
+        $featuredProjects = Project::where('is_featured', true)->orderBy('date_added', 'desc')->get();
+        $otherProjects = Project::where('is_featured', false)->orderBy('date_added', 'desc')->get();
+
+        $stats = [
+            'total_value' => '$' . number_format($projects->sum('budget')) . '+',
+            'completed' => $projects->where('status', 'completed')->count() . '+',
+            'units_delivered' => $projects->sum('team_size') . '+', // Using team_size as a proxy for units
+            'experience' => '15+' // Hardcoded as in the sample
+        ];
+
+        $projectTypes = $projects->groupBy('type')->map(function ($group) {
+            return $group->count();
+        });
+
         return Inertia::render('Public/Projects/Index', [
             'projects' => $projects,
+            'featuredProjects' => $featuredProjects,
+            'otherProjects' => $otherProjects,
+            'stats' => $stats,
+            'projectTypes' => $projectTypes,
+        ]);
+    }
+
+    public function publicShow(Project $project)
+    {
+        $otherProjects = Project::where('id', '!=', $project->id)->inRandomOrder()->limit(3)->get();
+
+        return Inertia::render('Public/Projects/Show', [
+            'project' => $project,
+            'otherProjects' => $otherProjects,
         ]);
     }
 }

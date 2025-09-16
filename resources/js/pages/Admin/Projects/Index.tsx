@@ -4,6 +4,7 @@ import {
 	DollarSign,
 	Download,
 	Edit,
+    Eye,
 	Hammer,
 	MapPin,
 	MoreHorizontal,
@@ -404,6 +405,12 @@ export default function ProjectsIndex({
 														>
 															<Edit className="mr-2 h-4 w-4" />
 															Edit
+														</DropdownMenuItem>
+														<DropdownMenuItem asChild>
+															<Link href={route("admin.projects.show", project.id)}>
+																<Eye className="mr-2 h-4 w-4" />
+																View
+															</Link>
 														</DropdownMenuItem>
 														<DropdownMenuSeparator />
 														<DropdownMenuItem

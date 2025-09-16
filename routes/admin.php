@@ -37,14 +37,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     })->name('admin.blogs.create');
     Route::get('blogs/{blog}/edit', [BlogController::class, 'edit'])->name('admin.blogs.edit');
 
-    Route::get('services', [ServiceController::class, 'index'])->name('admin.services.index');
-    Route::get('services/create', [ServiceController::class, 'create'])->name('admin.services.create');
-    Route::get('services/{service}/edit', [ServiceController::class, 'edit'])->name('admin.services.edit');
+    Route::resource('services', ServiceController::class)->names('admin.services');
 
     Route::get('projects', [ProjectController::class, 'index'])->name('admin.projects.index');
     Route::get('projects/create', [ProjectController::class, 'create'])->name('admin.projects.create');
+    Route::get('projects/{project}', [ProjectController::class, 'show'])->name('admin.projects.show');
     Route::get('projects/{project}/edit', [ProjectController::class, 'edit'])->name('admin.projects.edit');
     Route::post('projects', [ProjectController::class, 'store'])->name('admin.projects.store')->middleware('can:is_admin');
+    Route::put('projects/{project}', [ProjectController::class, 'update'])->name('admin.projects.update')->middleware('can:is_admin');
+    Route::delete('projects/{project}', [ProjectController::class, 'destroy'])->name('admin.projects.destroy')->middleware('can:is_admin');
 
     Route::get('tenants', [TenantController::class, 'index'])->name('admin.tenants.index');
     Route::get('tenants/create', [TenantController::class, 'create'])->name('admin.tenants.create');

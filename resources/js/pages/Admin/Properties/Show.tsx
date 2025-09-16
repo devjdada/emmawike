@@ -89,7 +89,7 @@ export default function ShowProperty({ auth, property }: ShowPropertyProps) {
 								Description
 							</h2>
 							<div
-								className="prose dark:prose-invert mt-4"
+								className="prose dark:prose-invert mt-4 tiptap"
 								dangerouslySetInnerHTML={{ __html: property.description }}
 							/>
 						</div>

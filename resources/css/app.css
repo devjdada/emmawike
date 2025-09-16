@@ -200,6 +200,12 @@
 			margin-bottom: 0.25em;
 		}
 	}
+	ol {
+		list-style: decimal;
+	}
+	ul {
+		list-style: disc;
+	}
 
 	/* Heading styles */
 	h1,
@@ -220,21 +226,21 @@
 	}
 
 	h1 {
-		font-size: 1.4rem;
+		font-size: 2.4rem;
 	}
 
 	h2 {
-		font-size: 1.2rem;
+		font-size: 2rem;
 	}
 
 	h3 {
-		font-size: 1.1rem;
+		font-size: 1.8rem;
 	}
 
 	h4,
 	h5,
 	h6 {
-		font-size: 1rem;
+		font-size: 1.4rem;
 	}
 
 	/* Code and preformatted text styles */
@@ -272,5 +278,10 @@
 		border: none;
 		border-top: 1px solid var(--gray-2);
 		margin: 2rem 0;
+	}
+	p {
+		margin-top: 0.75em;
+		margin-bottom: 0.75em;
+		line-height: 1.5;
 	}
 }

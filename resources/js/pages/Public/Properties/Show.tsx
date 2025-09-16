@@ -203,9 +203,10 @@ export default function PropertyShow({ property }: PropertyShowProps) {
 									<CardTitle>Property Description</CardTitle>
 								</CardHeader>
 								<CardContent>
-									<p className="text-muted-foreground leading-relaxed">
-										{property.description}
-									</p>
+									<div
+										className="prose dark:prose-invert tiptap mt-4"
+										dangerouslySetInnerHTML={{ __html: property.description }}
+									/>
 								</CardContent>
 							</Card>
 						</div>

@@ -26,11 +26,27 @@ class ProjectController extends Controller
         Gate::authorize('is_admin');
 
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'type' => 'required|string|in:residential,commercial,industrial',
+            'status' => 'required|string|in:planning,in_progress,completed,on_hold',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'budget' => 'required|numeric',
             'location' => 'required|string',
-            'image_url' => 'required|url',
+            'is_featured' => 'boolean',
+            'progress' => 'integer|min:0|max:100',
+            'team_size' => 'integer|min:1',
         ]);
+
+        $validatedData['posted_by_staff_id'] = auth()->id();
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('projects', 'public');
+            $validatedData['image_url'] = asset('storage/' . $path);
+        }
+        unset($validatedData['image']);
 
         $project = Project::create($validatedData);
 
@@ -54,11 +70,31 @@ class ProjectController extends Controller
         Gate::authorize('is_admin');
 
         $validatedData = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
+            'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
+            'type' => 'sometimes|required|string|in:residential,commercial,industrial',
+            'status' => 'sometimes|required|string|in:planning,in_progress,completed,on_hold',
+            'start_date' => 'sometimes|required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'budget' => 'sometimes|required|numeric',
             'location' => 'sometimes|required|string',
-            'image_url' => 'sometimes|required|url',
+            'is_featured' => 'boolean',
+            'progress' => 'integer|min:0|max:100',
+            'team_size' => 'integer|min:1',
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists
+            if ($project->image_url) {
+                $oldImagePath = str_replace(asset('storage/'), '', $project->image_url);
+                Storage::disk('public')->delete($oldImagePath);
+            }
+
+            $path = $request->file('image')->store('projects', 'public');
+            $validatedData['image_url'] = asset('storage/' . $path);
+        }
+        unset($validatedData['image']);
 
         $project->update($validatedData);
 

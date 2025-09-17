@@ -65,6 +65,11 @@ const mainNavItems: NavItem[] = [
 		href: "/admin/services",
 		icon: Settings,
 	},
+    {
+        title: "Categories",
+        href: "/admin/categories",
+        icon: ClipboardList,
+    },
 	{
 		title: "Tenants",
 		href: "/admin/tenants",

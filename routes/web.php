@@ -11,11 +11,18 @@ use App\Http\Controllers\Public\ProjectController;
 use App\Http\Controllers\Public\UserController;
 use App\Http\Controllers\Public\AgencyController;
 use App\Http\Controllers\Public\ContactController;
-use App\Http\Controllers\Public\AboutController; // Added this line
+use App\Http\Controllers\PublicPageController;
+
 use App\Http\Controllers\Public\SearchController;
 use App\Http\Controllers\Public\WelcomeController;
 
-Route::get('/', WelcomeController::class)->name('home');
+
+
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+
+]);
+});
 
 // Public Routes
 Route::get('/properties', [PropertyController::class, 'publicIndex'])->name('properties.index');
@@ -29,7 +36,7 @@ Route::get('/projects/{project}', [ProjectController::class, 'publicShow'])->nam
 Route::get('/agents', [UserController::class, 'publicIndex'])->name('agents.index');
 Route::get('/agencies', [AgencyController::class, 'publicIndex'])->name('agencies.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-Route::get('/about', [AboutController::class, 'index'])->name('about.index'); // Added this line
+Route::get('/about', [PublicPageController::class, 'about'])->name('about.index');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 

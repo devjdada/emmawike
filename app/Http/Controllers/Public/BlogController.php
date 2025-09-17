@@ -31,16 +31,26 @@ class BlogController extends Controller
 
     public function publicIndex()
     {
-        $blogs = Blog::where('status', 'published')->get();
+        $blogs = Blog::where('status', 'published')->orderBy('published_at', 'desc')->get();
+        $featuredBlog = $blogs->first();
+        $otherBlogs = $blogs->skip(1)->values();
+        $categories = Blog::where('status', 'published')->distinct()->pluck('category');
+
         return Inertia::render('Public/Blogs/Index', [
             'blogs' => $blogs,
+            'featuredBlog' => $featuredBlog,
+            'otherBlogs' => $otherBlogs,
+            'categories' => $categories,
         ]);
     }
 
     public function publicShow(Blog $blog)
     {
+        $otherBlogs = Blog::where('id', '!=', $blog->id)->inRandomOrder()->limit(3)->get();
+
         return Inertia::render('Public/Blogs/Show', [
             'blog' => $blog,
+            'otherBlogs' => $otherBlogs,
         ]);
     }
 }

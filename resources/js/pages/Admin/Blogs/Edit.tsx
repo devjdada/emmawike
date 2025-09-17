@@ -1,7 +1,15 @@
-// Removed AppLayout and Head imports
-import { useForm } from "@inertiajs/react";
-import InputError from "@/components/input-error";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import Tiptap from "@/components/tiptap";
 import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,203 +20,242 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import AppLayout from "@/layouts/app-layout";
+import type { PageProps } from "@/types";
 
 interface Blog {
-	id: string;
+	id: number;
 	title: string;
 	content: string;
 	excerpt: string;
 	author: string;
 	category: string;
-	status: "draft" | "published" | "archived";
-	published_at: string; // Changed from publishedAt
-	created_at: string; // Changed from createdAt
-	updated_at: string; // Changed from updatedAt
-	featured_image?: string; // Changed from featuredImage
-	tags: string[];
-	read_time: number; // Changed from readTime
-	user_id: string; // Ensure user_id is string (UUID)
+	status: string;
+	featured_image: File | null;
+	image_url: string;
+	tags: string;
+	read_time: number;
 }
 
-interface EditBlogProps {
-	// Simplified props for Edit page
-	auth: { user: { id: string; name: string; email: string } }; // Minimal user data
+interface EditBlogProps extends PageProps {
 	blog: Blog;
+	categories: { id: number; name: string }[];
 }
 
-// Changed default export name to EditBlogForm
-export default function EditBlogForm({ auth, blog }: EditBlogProps) {
-	const { toast } = useToast();
-	const categories = [
-		"Market Analysis",
-		"Buying Guide",
-		"Investment",
-		"Property Management",
-		"Legal",
-	];
+export default function EditBlogPage({
+	auth,
+	blog,
+	categories,
+}: EditBlogProps) {
+	const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-	const { data, setData, put, processing, errors, reset } = useForm({
-		title: blog.title,
-		content: blog.content,
-		excerpt: blog.excerpt,
-		author: blog.author,
-		category: blog.category,
-		status: blog.status,
-		featured_image: blog.featured_image || "",
-		tags: blog.tags.join(", "), // Convert array to comma-separated string
-		user_id: blog.user_id,
+	const { data, setData, post, processing, errors, reset } = useForm<Blog>({
+		...blog,
+		featured_image: null,
+		_method: "PUT",
 	});
 
-	const submit = (e: React.FormEvent) => {
+	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		put(route("admin.blogs.update", blog.id), {
-			onSuccess: () => {
-				toast({ title: "Success", description: "Blog updated successfully" });
-			},
-			onError: () => {
-				toast({
-					title: "Error",
-					description: "Failed to update blog",
-					variant: "destructive",
-				});
-			},
-		});
+		post(route("admin.blogs.update", blog.id));
 	};
 
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0] || null;
+		setData("featured_image", file);
+		if (file) {
+			const previewUrl = URL.createObjectURL(file);
+			setImagePreview(previewUrl);
+		}
+	};
+
+	useEffect(() => {
+		if (blog.image_url) {
+			setImagePreview(blog.image_url);
+		}
+	}, []);
+
 	return (
-		<form onSubmit={submit} className="space-y-6">
-			<div className="grid grid-cols-2 gap-4">
-				<div>
-					<Label htmlFor="title">Title</Label>
-					<Input
-						id="title"
-						type="text"
-						name="title"
-						value={data.title}
-						className="mt-1 block w-full"
-						autoComplete="title"
-						onChange={(e) => setData("title", e.target.value)}
-						required
-					/>
-					<InputError message={errors.title} className="mt-2" />
+		<AppLayout user={auth.user}>
+			<Head title="Edit Blog Post" />
+
+			<div className="pt-24 pb-8">
+				<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+					<Link href={route("admin.blogs.index")}>
+						<Button variant="outline" size="sm">
+							<ArrowLeft className="h-4 w-4 mr-2" />
+							Back to Blogs
+						</Button>
+					</Link>
+
+					<Card className="mt-6">
+						<CardHeader>
+							<CardTitle>Edit Blog Post</CardTitle>
+							<CardDescription>
+								Update the blog post details below
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<form onSubmit={onSubmit} className="space-y-6">
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									<div>
+										<Label htmlFor="title">Title</Label>
+										<Input
+											id="title"
+											placeholder="Blog post title..."
+											value={data.title}
+											onChange={(e) => setData("title", e.target.value)}
+										/>
+										{errors.title && (
+											<p className="text-red-500 text-xs mt-1">
+												{errors.title}
+											</p>
+										)}
+									</div>
+									<div>
+										<Label htmlFor="category">Category</Label>
+										<Select
+											onValueChange={(value) => setData("category", value)}
+											value={data.category}
+										>
+											<SelectTrigger>
+												<SelectValue placeholder="Select category" />
+											</SelectTrigger>
+											<SelectContent>
+												{categories.map((category) => (
+													<SelectItem
+														key={`category-${category.id}`}
+														value={category.name}
+													>
+														{category.name}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										{errors.category && (
+											<p className="text-red-500 text-xs mt-1">
+												{errors.category}
+											</p>
+										)}
+									</div>
+									<div>
+										<Label htmlFor="author">Author</Label>
+										<Input id="author" value={data.author} disabled />
+									</div>
+									<div>
+										<Label htmlFor="status">Status</Label>
+										<Select
+											onValueChange={(value) => setData("status", value)}
+											value={data.status}
+										>
+											<SelectTrigger>
+												<SelectValue placeholder="Select status" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="draft">Draft</SelectItem>
+												<SelectItem value="published">Published</SelectItem>
+											</SelectContent>
+										</Select>
+										{errors.status && (
+											<p className="text-red-500 text-xs mt-1">
+												{errors.status}
+											</p>
+										)}
+									</div>
+									<div>
+										<Label htmlFor="tags">Tags (comma-separated)</Label>
+										<Input
+											id="tags"
+											placeholder="e.g. investing, market trends"
+											value={data.tags}
+											onChange={(e) => setData("tags", e.target.value)}
+										/>
+										{errors.tags && (
+											<p className="text-red-500 text-xs mt-1">{errors.tags}</p>
+										)}
+									</div>
+									<div>
+										<Label htmlFor="read_time">Read Time (minutes)</Label>
+										<Input
+											id="read_time"
+											type="number"
+											placeholder="5"
+											value={data.read_time}
+											onChange={(e) =>
+												setData("read_time", Number(e.target.value))
+											}
+										/>
+										{errors.read_time && (
+											<p className="text-red-500 text-xs mt-1">
+												{errors.read_time}
+											</p>
+										)}
+									</div>
+								</div>
+
+								<div>
+									<Label htmlFor="featured_image">Featured Image</Label>
+									<Input
+										id="featured_image"
+										type="file"
+										onChange={handleFileChange}
+									/>
+									{errors.featured_image && (
+										<p className="text-red-500 text-xs mt-1">
+											{errors.featured_image}
+										</p>
+									)}
+									{imagePreview && (
+										<div className="mt-4">
+											<p className="text-sm font-medium">Image Preview:</p>
+											<img
+												src={imagePreview}
+												alt="Image preview"
+												className="mt-2 h-20 w-auto rounded"
+											/>
+										</div>
+									)}
+								</div>
+
+								<div>
+									<Label htmlFor="excerpt">Excerpt</Label>
+									<Textarea
+										id="excerpt"
+										placeholder="A short summary of the blog post..."
+										className="min-h-[100px]"
+										value={data.excerpt}
+										onChange={(e) => setData("excerpt", e.target.value)}
+									/>
+									{errors.excerpt && (
+										<p className="text-red-500 text-xs mt-1">
+											{errors.excerpt}
+										</p>
+									)}
+								</div>
+
+								<div>
+									<Label htmlFor="content">Content</Label>
+									<Tiptap
+										description={data.content}
+										onChange={(newContent) => setData("content", newContent)}
+									/>
+									{errors.content && (
+										<p className="text-red-500 text-xs mt-1">
+											{errors.content}
+										</p>
+									)}
+								</div>
+
+								<div className="flex justify-end">
+									<Button type="submit" disabled={processing}>
+										Update Post
+									</Button>
+								</div>
+							</form>
+						</CardContent>
+					</Card>
 				</div>
-				<div>
-					<Label htmlFor="author">Author</Label>
-					<Input
-						id="author"
-						type="text"
-						name="author"
-						value={data.author}
-						className="mt-1 block w-full"
-						autoComplete="author"
-						onChange={(e) => setData("author", e.target.value)}
-						required
-					/>
-					<InputError message={errors.author} className="mt-2" />
-				</div>
 			</div>
-
-			<div>
-				<Label htmlFor="excerpt">Excerpt</Label>
-				<Textarea
-					id="excerpt"
-					name="excerpt"
-					value={data.excerpt}
-					className="mt-1 block w-full"
-					onChange={(e) => setData("excerpt", e.target.value)}
-					rows={2}
-					required
-				/>
-				<InputError message={errors.excerpt} className="mt-2" />
-			</div>
-
-			<div>
-				<Label htmlFor="content">Content</Label>
-				<Textarea
-					id="content"
-					name="content"
-					value={data.content}
-					className="mt-1 block w-full"
-					onChange={(e) => setData("content", e.target.value)}
-					rows={8}
-					required
-				/>
-				<InputError message={errors.content} className="mt-2" />
-			</div>
-
-			<div className="grid grid-cols-2 gap-4">
-				<div>
-					<Label htmlFor="category">Category</Label>
-					<Select
-						value={data.category}
-						onValueChange={(value) => setData("category", value)}
-					>
-						<SelectTrigger>
-							<SelectValue placeholder="Select category" />
-						</SelectTrigger>
-						<SelectContent>
-							{categories.map((category) => (
-								<SelectItem key={category} value={category}>
-									{category}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-					<InputError message={errors.category} className="mt-2" />
-				</div>
-				<div>
-					<Label htmlFor="status">Status</Label>
-					<Select
-						value={data.status}
-						onValueChange={(value: Blog["status"]) => setData("status", value)}
-					>
-						<SelectTrigger>
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="draft">Draft</SelectItem>
-							<SelectItem value="published">Published</SelectItem>
-							<SelectItem value="archived">Archived</SelectItem>
-						</SelectContent>
-					</Select>
-					<InputError message={errors.status} className="mt-2" />
-				</div>
-			</div>
-
-			<div>
-				<Label htmlFor="featured_image">Featured Image URL</Label>
-				<Input
-					id="featured_image"
-					type="url"
-					name="featured_image"
-					value={data.featured_image}
-					className="mt-1 block w-full"
-					autoComplete="featured_image"
-					onChange={(e) => setData("featured_image", e.target.value)}
-					placeholder="https://example.com/image.jpg"
-				/>
-				<InputError message={errors.featured_image} className="mt-2" />
-			</div>
-
-			<div>
-				<Label htmlFor="tags">Tags (comma-separated)</Label>
-				<Input
-					id="tags"
-					type="text"
-					name="tags"
-					value={data.tags}
-					className="mt-1 block w-full"
-					autoComplete="tags"
-					onChange={(e) => setData("tags", e.target.value)}
-					placeholder="real estate, tips, guide"
-				/>
-				<InputError message={errors.tags} className="mt-2" />
-			</div>
-
-			<Button type="submit" disabled={processing}>
-				Update Blog
-			</Button>
-		</form>
+		</AppLayout>
 	);
 }

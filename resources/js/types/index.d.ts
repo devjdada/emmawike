@@ -42,3 +42,32 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface TeamMember {
+    id: number;
+    name: string;
+    title: string;
+    photo_url: string;
+    bio: string;
+}
+
+export interface Testimonial {
+    id: number;
+    author_name: string;
+    author_title: string;
+    content: string;
+    photo_url: string;
+}
+
+export interface Client {
+    id: number;
+    name: string;
+    logo_url: string;
+    website_url: string;
+}
+
+export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    };
+};

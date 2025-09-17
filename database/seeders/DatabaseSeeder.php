@@ -58,5 +58,11 @@ class DatabaseSeeder extends Seeder
 
         Property::factory(20)->create();
         \App\Models\Project::factory(20)->create();
+
+        $this->call([
+            TeamMemberSeeder::class,
+            TestimonialSeeder::class,
+            ClientSeeder::class,
+        ]);
     }
 }

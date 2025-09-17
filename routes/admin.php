@@ -31,13 +31,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('agencies/create', [AgencyController::class, 'create'])->name('admin.agencies.create');
     Route::get('agencies/{agency}/edit', [AgencyController::class, 'edit'])->name('admin.agencies.edit');
 
-    Route::get('blogs', [BlogController::class, 'index'])->name('admin.blogs.index');
-    Route::get('blogs/create', function () {
-        return Inertia::render('Blogs/CreatePage'); // Point to the new full page component
-    })->name('admin.blogs.create');
-    Route::get('blogs/{blog}/edit', [BlogController::class, 'edit'])->name('admin.blogs.edit');
+    Route::resource('blogs', BlogController::class)->names('admin.blogs');
 
     Route::resource('services', ServiceController::class)->names('admin.services');
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
 
     Route::get('projects', [ProjectController::class, 'index'])->name('admin.projects.index');
     Route::get('projects/create', [ProjectController::class, 'create'])->name('admin.projects.create');

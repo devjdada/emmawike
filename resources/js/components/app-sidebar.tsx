@@ -71,6 +71,21 @@ const mainNavItems: NavItem[] = [
         icon: ClipboardList,
     },
 	{
+		title: "Team Members",
+		href: "/admin/teams",
+		icon: Users,
+	},
+	{
+		title: "Testimonials",
+		href: "/admin/testimonials",
+		icon: Star,
+	},
+	{
+		title: "Clients",
+		href: "/admin/clients",
+		icon: Briefcase,
+	},
+	{
 		title: "Tenants",
 		href: "/admin/tenants",
 		icon: UserSquare2,

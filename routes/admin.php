@@ -35,6 +35,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
     Route::resource('services', ServiceController::class)->names('admin.services');
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
+    Route::resource('teams', \App\Http\Controllers\Admin\TeamMemberController::class)->names('admin.teams');
+    Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class)->names('admin.testimonials');
+    Route::resource('clients', \App\Http\Controllers\Admin\ClientController::class)->names('admin.clients');
 
     Route::get('projects', [ProjectController::class, 'index'])->name('admin.projects.index');
     Route::get('projects/create', [ProjectController::class, 'create'])->name('admin.projects.create');

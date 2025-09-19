@@ -210,6 +210,7 @@ class PropertyController extends Controller
 
     public function publicShow(Property $property)
     {
+        $property->increment('views'); // Increment view count
         $property->load('media');
         return Inertia::render('Public/Properties/Show', [
             'property' => $property,

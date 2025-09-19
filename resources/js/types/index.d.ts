@@ -1,42 +1,30 @@
 import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
 
-export interface Auth {
-    user: User;
-}
-
-export interface BreadcrumbItem {
-    title: string;
-    href: string;
-}
-
-export interface NavGroup {
-    title: string;
-    items: NavItem[];
-}
-
-export interface NavItem {
-    title: string;
-    href: string;
-    icon?: LucideIcon | null;
-    isActive?: boolean;
-}
-
-export interface SharedData {
+export interface Agency {
+    id: string;
     name: string;
-    quote: { message: string; author: string };
-    auth: Auth;
-    ziggy: Config & { location: string };
-    sidebarOpen: boolean;
-    flash: { success?: string; error?: string; };
-    [key: string]: unknown;
+    description: string;
+    logo_url: string;
+    user_id: string;
+    users?: User[]; // Eager loaded agents belonging to the agency
+    owner?: User; // Eager loaded owner of the agency
 }
 
 export interface User {
     id: number;
     name: string;
     email: string;
-    avatar?: string;
+    avatar?: string; // Added for agent avatar
+    phone?: string; // Added for agent phone
+    location?: string; // Added for agent location
+    specialization?: string; // Added for agent specialization
+    experience?: string; // Added for agent experience
+    rating?: number; // Added for agent rating
+    totalSales?: number; // Added for agent total sales
+    bio?: string; // Added for agent bio
+    certifications?: string[]; // Added for agent certifications
+    languages?: string[]; // Added for agent languages
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;

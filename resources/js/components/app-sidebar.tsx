@@ -13,6 +13,7 @@ import {
 	UserCheck,
 	UserSquare2,
 	Users,
+	Star,
 } from "lucide-react";
 import { NavFooter } from "@/components/nav-footer";
 import { NavMain } from "@/components/nav-main";

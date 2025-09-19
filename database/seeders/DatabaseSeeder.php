@@ -63,6 +63,7 @@ class DatabaseSeeder extends Seeder
             TeamMemberSeeder::class,
             TestimonialSeeder::class,
             ClientSeeder::class,
+            ServiceArticlesSeeder::class,
         ]);
     }
 }

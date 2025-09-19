@@ -1,6 +1,6 @@
 import { Head, Link, useForm } from "@inertiajs/react";
 import { Edit, Plus, Search, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -43,17 +43,16 @@ export default function TestimonialsIndex({
 	const [searchTerm, setSearchTerm] = useState("");
 	const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [selectedFile, setSelectedFile] = useState<File | null>(null);
+	const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
 
-	const {
-		data,
-		setData,
-		post,
-		put,
-		delete: inertiaDelete,
-		processing,
-		errors,
-		reset,
-	} = useForm<Testimonial>({
+	const { data, setData, post, put, delete: inertiaDelete, processing, errors, reset } = useForm<{
+		id: number;
+		author_name: string;
+		author_title: string;
+		content: string;
+		photo_url: string | File | null;
+	}>({ // Updated type for photo_url
 		id: 0,
 		author_name: "",
 		author_title: "",
@@ -66,23 +65,60 @@ export default function TestimonialsIndex({
 		       testimonial.content.toLowerCase().includes(searchTerm.toLowerCase());
 	});
 
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files[0]) {
+			const file = e.target.files[0];
+			setSelectedFile(file);
+			setImagePreviewUrl(URL.createObjectURL(file));
+			setData("photo_url", ""); // Explicitly clear photo_url when file is selected
+		} else {
+			setSelectedFile(null);
+			setImagePreviewUrl(null);
+			setData("photo_url", editingTestimonial?.photo_url || ""); // Revert to existing URL or empty
+		}
+	};
+
+	const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setData("photo_url", e.target.value);
+		setImagePreviewUrl(e.target.value); // Update preview with URL
+		setSelectedFile(null); // Clear selected file if URL is typed
+	};
+
 	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+
+		const formData = new FormData();
+		formData.append("author_name", data.author_name);
+		formData.append("author_title", data.author_title);
+		formData.append("content", data.content);
+
+		if (selectedFile) {
+			formData.append("photo_file", selectedFile); // Append the file
+		} else if (typeof data.photo_url === "string" && data.photo_url) {
+			formData.append("photo_url", data.photo_url); // Append the URL
+		}
+
 		if (editingTestimonial) {
-			put(route("admin.testimonials.update", editingTestimonial.id), {
+			// For PUT requests with FormData, you might need to manually set _method
+			formData.append("_method", "PUT");
+			post(route("admin.testimonials.update", editingTestimonial.id), formData, {
 				onSuccess: () => {
 					reset();
 					setIsDialogOpen(false);
 					setEditingTestimonial(null);
+					setSelectedFile(null);
+					setImagePreviewUrl(null);
 					setData({ id: 0, author_name: "", author_title: "", content: "", photo_url: "" });
 				},
 			});
 		} else {
-			post(route("admin.testimonials.store"), {
+			post(route("admin.testimonials.store"), formData, {
 				onSuccess: () => {
 					reset();
 					setData({ id: 0, author_name: "", author_title: "", content: "", photo_url: "" });
 					setEditingTestimonial(null);
+					setSelectedFile(null);
+					setImagePreviewUrl(null);
 					setIsDialogOpen(false);
 				},
 			});
@@ -91,7 +127,9 @@ export default function TestimonialsIndex({
 
 	const handleEdit = (testimonial: Testimonial) => {
 		setEditingTestimonial(testimonial);
-		setData(testimonial);
+		setData({ ...testimonial, photo_url: testimonial.photo_url || "" }); // Ensure photo_url is string
+		setImagePreviewUrl(testimonial.photo_url || null); // Set preview for existing image
+		setSelectedFile(null); // Clear any previously selected file
 		setIsDialogOpen(true);
 	};
 
@@ -168,12 +206,24 @@ export default function TestimonialsIndex({
 										<Label htmlFor="photo_url">Photo URL</Label>
 										<Input
 											id="photo_url"
+											type="text"
 											placeholder="https://example.com/photo.jpg"
-											value={data.photo_url}
-											onChange={(e) => setData("photo_url", e.target.value)}
+											value={typeof data.photo_url === 'string' ? data.photo_url : ''}
+											onChange={handleUrlChange}
 										/>
 										{errors.photo_url && (
 											<p className="text-red-500 text-xs mt-1">{errors.photo_url}</p>
+										)}
+										<Label htmlFor="photo_file" className="mt-4 block">Or Upload Photo</Label>
+										<Input
+											id="photo_file"
+											type="file"
+											onChange={handleFileChange}
+										/>
+										{imagePreviewUrl && (
+											<div className="mt-4">
+												<img src={imagePreviewUrl} alt="Photo Preview" className="max-w-full h-auto max-h-32 object-cover" />
+											</div>
 										)}
 									</div>
 									<div>

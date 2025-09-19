@@ -31,7 +31,7 @@ class AgencyController extends Controller
 
     public function publicIndex()
     {
-        $agencies = Agency::all();
+        $agencies = Agency::with(['users', 'owner'])->get();
         return Inertia::render('Public/Agencies/Index', [
             'agencies' => $agencies,
         ]);

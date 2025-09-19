@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from "@inertiajs/react";
 import { format } from "date-fns"; // Import date-fns for date formatting
+import { useEffect } from "react"; // Import useEffect
 import {
 	BookOpen,
 	Edit,
@@ -70,7 +71,49 @@ export default function BlogsIndex({
 	const [categoryFilter, setCategoryFilter] = useState("all");
 	const { toast } = useToast();
 
-	const { delete: inertiaDelete } = useForm();
+	const { delete: inertiaDelete, patch } = useForm();
+
+	useEffect(() => {
+		setBlogs(initialBlogs);
+	}, [initialBlogs]);
+
+	const handleStatusChange = (
+		blogId: string,
+		newStatus: "draft" | "published" | "archived",
+	) => {
+		console.log(`Attempting to update blog ${blogId} to status: ${newStatus}`);
+		patch(
+			route("admin.blogs.update", blogId),
+			{
+				status: newStatus,
+			},
+			{
+				preserveScroll: true,
+				onSuccess: () => {
+					console.log(`Blog ${blogId} status updated successfully (frontend callback).`);
+					toast({
+						title: "Success",
+						description: "Blog status updated successfully.",
+					});
+					// The setBlogs here is technically redundant if useEffect handles it,
+					// but it provides immediate visual feedback before the full page re-render.
+					setBlogs((prevBlogs) =>
+						prevBlogs.map((blog) =>
+							blog.id === blogId ? { ...blog, status: newStatus } : blog,
+						),
+					);
+				},
+				onError: (errors) => {
+					console.error("Failed to update blog status (frontend callback):", errors);
+					toast({
+						title: "Error",
+						description: "Failed to update blog status. Check console for details.",
+						variant: "destructive",
+					});
+				},
+			},
+		);
+	};
 
 	const categories = [
 		"Market Analysis",
@@ -111,20 +154,6 @@ export default function BlogsIndex({
 				},
 			});
 		}
-	};
-
-	const getStatusBadge = (status: Blog["status"]) => {
-		const variants = {
-			draft: "secondary",
-			published: "default",
-			archived: "destructive",
-		} as const;
-
-		return (
-			<Badge variant={variants[status]}>
-				{status.charAt(0).toUpperCase() + status.slice(1)}
-			</Badge>
-		);
 	};
 
 	return (
@@ -280,7 +309,23 @@ export default function BlogsIndex({
 									</TableCell>
 									<TableCell>{blog.author}</TableCell>
 									<TableCell>{blog.category}</TableCell>
-									<TableCell>{getStatusBadge(blog.status)}</TableCell>
+									<TableCell>
+										<Select
+											value={blog.status}
+											onValueChange={(
+												newStatus: "draft" | "published" | "archived",
+											) => handleStatusChange(blog.id, newStatus)}
+										>
+											<SelectTrigger className="w-36">
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="draft">Draft</SelectItem>
+												<SelectItem value="published">Published</SelectItem>
+												<SelectItem value="archived">Archived</SelectItem>
+											</SelectContent>
+										</Select>
+									</TableCell>
 									<TableCell>
 										{blog.published_at
 											? format(new Date(blog.published_at), "MMM dd, yyyy")

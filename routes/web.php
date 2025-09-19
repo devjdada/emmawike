@@ -17,12 +17,7 @@ use App\Http\Controllers\Public\SearchController;
 use App\Http\Controllers\Public\WelcomeController;
 
 
-
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-
-]);
-});
+Route::get('/welcome', WelcomeController::class)->name('home');
 
 // Public Routes
 Route::get('/properties', [PropertyController::class, 'publicIndex'])->name('properties.index');

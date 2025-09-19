@@ -10,7 +10,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-
+import { FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -233,13 +233,6 @@ export default function CreateBlogPage({ auth, categories }: CreateBlogProps) {
 								</div>
 							</form>
 						</CardContent>
-					</Card>
-				</div>
-			</div>
-		</AppLayout>
-	);
-}
-/CardContent>
 					</Card>
 				</div>
 			</div>

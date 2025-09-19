@@ -1,6 +1,6 @@
 import { Head, Link, useForm } from "@inertiajs/react";
 import { Edit, Plus, Search, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -30,30 +30,25 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import AppLayout from "@/layouts/app-layout";
-import type { PageProps, Client } from "@/types";
+import type { Client, PageProps } from "@/types";
 
 interface ClientsIndexProps extends PageProps {
 	clients: Client[];
 }
 
-export default function ClientsIndex({
-	auth,
-	clients,
-}: ClientsIndexProps) {
+export default function ClientsIndex({ auth, clients }: ClientsIndexProps) {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [editingClient, setEditingClient] = useState<Client | null>(null);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [selectedFile, setSelectedFile] = useState<File | null>(null);
+	const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
 
-	const {
-		data,
-		setData,
-		post,
-		put,
-		delete: inertiaDelete,
-		processing,
-		errors,
-		reset,
-	} = useForm<Client>({
+	const { data, setData, post, put, delete: inertiaDelete, processing, errors, reset } = useForm<{
+		id: number;
+		name: string;
+		logo_url: string | File | null;
+		website_url: string;
+	}>({ // Updated type for logo_url
 		id: 0,
 		name: "",
 		logo_url: "",
@@ -64,23 +59,59 @@ export default function ClientsIndex({
 		return client.name.toLowerCase().includes(searchTerm.toLowerCase());
 	});
 
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files[0]) {
+			const file = e.target.files[0];
+			setSelectedFile(file);
+			setImagePreviewUrl(URL.createObjectURL(file));
+			setData("logo_url", ""); // Explicitly clear logo_url when file is selected
+		} else {
+			setSelectedFile(null);
+			setImagePreviewUrl(null);
+			setData("logo_url", editingClient?.logo_url || ""); // Revert to existing URL or empty
+		}
+	};
+
+	const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setData("logo_url", e.target.value);
+		setImagePreviewUrl(e.target.value); // Update preview with URL
+		setSelectedFile(null); // Clear selected file if URL is typed
+	};
+
 	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+
+		const formData = new FormData();
+		formData.append("name", data.name);
+		formData.append("website_url", data.website_url);
+
+		if (selectedFile) {
+			formData.append("logo_file", selectedFile); // Append the file
+		} else if (typeof data.logo_url === "string" && data.logo_url) {
+			formData.append("logo_url", data.logo_url); // Append the URL
+		}
+
 		if (editingClient) {
-			put(route("admin.clients.update", editingClient.id), {
+			// For PUT requests with FormData, you might need to manually set _method
+			formData.append("_method", "PUT");
+			post(route("admin.clients.update", editingClient.id), formData, {
 				onSuccess: () => {
 					reset();
 					setIsDialogOpen(false);
 					setEditingClient(null);
+					setSelectedFile(null);
+					setImagePreviewUrl(null);
 					setData({ id: 0, name: "", logo_url: "", website_url: "" });
 				},
 			});
 		} else {
-			post(route("admin.clients.store"), {
+			post(route("admin.clients.store"), formData, {
 				onSuccess: () => {
 					reset();
 					setData({ id: 0, name: "", logo_url: "", website_url: "" });
 					setEditingClient(null);
+					setSelectedFile(null);
+					setImagePreviewUrl(null);
 					setIsDialogOpen(false);
 				},
 			});
@@ -89,7 +120,9 @@ export default function ClientsIndex({
 
 	const handleEdit = (client: Client) => {
 		setEditingClient(client);
-		setData(client);
+		setData({ ...client, logo_url: client.logo_url || "" }); // Ensure logo_url is string
+		setImagePreviewUrl(client.logo_url || null); // Set preview for existing image
+		setSelectedFile(null); // Clear any previously selected file
 		setIsDialogOpen(true);
 	};
 
@@ -108,9 +141,7 @@ export default function ClientsIndex({
 							<h1 className="text-3xl font-bold text-foreground">
 								Client Management
 							</h1>
-							<p className="text-muted-foreground">
-								Manage your clients
-							</p>
+							<p className="text-muted-foreground">Manage your clients</p>
 						</div>
 						<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 							<DialogTrigger asChild>
@@ -118,6 +149,8 @@ export default function ClientsIndex({
 									onClick={() => {
 										setEditingClient(null);
 										reset();
+										setSelectedFile(null);
+										setImagePreviewUrl(null);
 										setIsDialogOpen(true);
 									}}
 								>
@@ -154,12 +187,26 @@ export default function ClientsIndex({
 										<Label htmlFor="logo_url">Logo URL</Label>
 										<Input
 											id="logo_url"
+											type="text"
 											placeholder="https://example.com/logo.png"
-											value={data.logo_url}
-											onChange={(e) => setData("logo_url", e.target.value)}
+											value={typeof data.logo_url === 'string' ? data.logo_url : ''}
+											onChange={handleUrlChange}
 										/>
 										{errors.logo_url && (
-											<p className="text-red-500 text-xs mt-1">{errors.logo_url}</p>
+											<p className="text-red-500 text-xs mt-1">
+												{errors.logo_url}
+											</p>
+										)}
+										<Label htmlFor="logo_file" className="mt-4 block">Or Upload Logo</Label>
+										<Input
+											id="logo_file"
+											type="file"
+											onChange={handleFileChange}
+										/>
+										{imagePreviewUrl && (
+											<div className="mt-4">
+												<img src={imagePreviewUrl} alt="Logo Preview" className="max-w-full h-auto max-h-32 object-contain" />
+											</div>
 										)}
 									</div>
 									<div>
@@ -171,7 +218,9 @@ export default function ClientsIndex({
 											onChange={(e) => setData("website_url", e.target.value)}
 										/>
 										{errors.website_url && (
-											<p className="text-red-500 text-xs mt-1">{errors.website_url}</p>
+											<p className="text-red-500 text-xs mt-1">
+												{errors.website_url}
+											</p>
 										)}
 									</div>
 
@@ -226,13 +275,22 @@ export default function ClientsIndex({
 										<TableRow key={client.id}>
 											<TableCell>
 												{client.logo_url && (
-													<img src={client.logo_url} alt={client.name} className="h-10 w-10 object-contain" />
+													<img
+														src={client.logo_url}
+														alt={client.name}
+														className="h-10 w-10 object-contain"
+													/>
 												)}
 											</TableCell>
 											<TableCell>{client.name}</TableCell>
 											<TableCell>
 												{client.website_url ? (
-													<a href={client.website_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+													<a
+														href={client.website_url}
+														target="_blank"
+														rel="noopener noreferrer"
+														className="text-blue-500 hover:underline"
+													>
 														{client.website_url}
 													</a>
 												) : (
@@ -264,7 +322,7 @@ export default function ClientsIndex({
 						</CardContent>
 					</Card>
 				</div>
-			}
+			</div>
 		</AppLayout>
 	);
 }

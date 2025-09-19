@@ -1,6 +1,6 @@
 import { Head, Link, useForm } from "@inertiajs/react";
 import { Edit, Plus, Search, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -19,7 +19,16 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label }nimport { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 import AppLayout from "@/layouts/app-layout";
 import type { PageProps, TeamMember } from "@/types";
 
@@ -27,24 +36,20 @@ interface TeamIndexProps extends PageProps {
 	teamMembers: TeamMember[];
 }
 
-export default function TeamIndex({
-	auth,
-	teamMembers,
-}: TeamIndexProps) {
+export default function TeamIndex({ auth, teamMembers }: TeamIndexProps) {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [editingTeamMember, setEditingTeamMember] = useState<TeamMember | null>(null);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [selectedFile, setSelectedFile] = useState<File | null>(null);
+	const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
 
-	const {
-		data,
-		setData,
-		post,
-		put,
-		delete: inertiaDelete,
-		processing,
-		errors,
-		reset,
-	} = useForm<TeamMember>({
+	const { data, setData, post, put, delete: inertiaDelete, processing, errors, reset } = useForm<{
+		id: number;
+		name: string;
+		title: string;
+		photo_url: string | File | null;
+		bio: string;
+	}>({ // Updated type for photo_url
 		id: 0,
 		name: "",
 		title: "",
@@ -53,27 +58,66 @@ export default function TeamIndex({
 	});
 
 	const filteredTeamMembers = teamMembers.filter((member) => {
-		return member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-		       member.title.toLowerCase().includes(searchTerm.toLowerCase());
+		return (
+			member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			member.title.toLowerCase().includes(searchTerm.toLowerCase())
+		);
 	});
+
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files[0]) {
+			const file = e.target.files[0];
+			setSelectedFile(file);
+			setImagePreviewUrl(URL.createObjectURL(file));
+			setData("photo_url", ""); // Explicitly clear photo_url when file is selected
+		} else {
+			setSelectedFile(null);
+			setImagePreviewUrl(null);
+			setData("photo_url", editingTeamMember?.photo_url || ""); // Revert to existing URL or empty
+		}
+	};
+
+	const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setData("photo_url", e.target.value);
+		setImagePreviewUrl(e.target.value); // Update preview with URL
+		setSelectedFile(null); // Clear selected file if URL is typed
+	};
 
 	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+
+		const formData = new FormData();
+		formData.append("name", data.name);
+		formData.append("title", data.title);
+		formData.append("bio", data.bio);
+
+		if (selectedFile) {
+			formData.append("photo_file", selectedFile); // Append the file
+		} else if (typeof data.photo_url === "string" && data.photo_url) {
+			formData.append("photo_url", data.photo_url); // Append the URL
+		}
+
 		if (editingTeamMember) {
-			put(route("admin.teams.update", editingTeamMember.id), {
+			// For PUT requests with FormData, you might need to manually set _method
+			formData.append("_method", "PUT");
+			post(route("admin.teams.update", editingTeamMember.id), formData, {
 				onSuccess: () => {
 					reset();
 					setIsDialogOpen(false);
 					setEditingTeamMember(null);
+					setSelectedFile(null);
+					setImagePreviewUrl(null);
 					setData({ id: 0, name: "", title: "", photo_url: "", bio: "" });
 				},
 			});
 		} else {
-			post(route("admin.teams.store"), {
+			post(route("admin.teams.store"), formData, {
 				onSuccess: () => {
 					reset();
 					setData({ id: 0, name: "", title: "", photo_url: "", bio: "" });
 					setEditingTeamMember(null);
+					setSelectedFile(null);
+					setImagePreviewUrl(null);
 					setIsDialogOpen(false);
 				},
 			});
@@ -82,7 +126,9 @@ export default function TeamIndex({
 
 	const handleEdit = (member: TeamMember) => {
 		setEditingTeamMember(member);
-		setData(member);
+		setData({ ...member, photo_url: member.photo_url || "" }); // Ensure photo_url is string
+		setImagePreviewUrl(member.photo_url || null); // Set preview for existing image
+		setSelectedFile(null); // Clear any previously selected file
 		setIsDialogOpen(true);
 	};
 
@@ -111,6 +157,8 @@ export default function TeamIndex({
 									onClick={() => {
 										setEditingTeamMember(null);
 										reset();
+										setSelectedFile(null);
+										setImagePreviewUrl(null);
 										setIsDialogOpen(true);
 									}}
 								>
@@ -121,7 +169,9 @@ export default function TeamIndex({
 							<DialogContent>
 								<DialogHeader>
 									<DialogTitle>
-										{editingTeamMember ? "Edit Team Member" : "Add New Team Member"}
+										{editingTeamMember
+											? "Edit Team Member"
+											: "Add New Team Member"}
 									</DialogTitle>
 									<DialogDescription>
 										{editingTeamMember
@@ -152,19 +202,33 @@ export default function TeamIndex({
 											onChange={(e) => setData("title", e.target.value)}
 										/>
 										{errors.title && (
-											<p className="text-red-500 text-xs mt-1">{errors.title}</p>
+											<p className="text-red-500 text-xs mt-1">
+												{errors.title}
+											</p>
 										)}
 									</div>
 									<div>
 										<Label htmlFor="photo_url">Photo URL</Label>
 										<Input
 											id="photo_url"
+											type="text"
 											placeholder="https://example.com/photo.jpg"
-											value={data.photo_url}
-											onChange={(e) => setData("photo_url", e.target.value)}
+											value={typeof data.photo_url === 'string' ? data.photo_url : ''}
+											onChange={handleUrlChange}
 										/>
 										{errors.photo_url && (
 											<p className="text-red-500 text-xs mt-1">{errors.photo_url}</p>
+										)}
+										<Label htmlFor="photo_file" className="mt-4 block">Or Upload Photo</Label>
+										<Input
+											id="photo_file"
+											type="file"
+											onChange={handleFileChange}
+										/>
+										{imagePreviewUrl && (
+											<div className="mt-4">
+												<img src={imagePreviewUrl} alt="Photo Preview" className="max-w-full h-auto max-h-32 object-cover" />
+											</div>
 										)}
 									</div>
 									<div>
@@ -176,9 +240,7 @@ export default function TeamIndex({
 											onChange={(e) => setData("bio", e.target.value)}
 										/>
 										{errors.bio && (
-											<p className="text-red-500 text-xs mt-1">
-												{errors.bio}
-											</p>
+											<p className="text-red-500 text-xs mt-1">{errors.bio}</p>
 										)}
 									</div>
 
@@ -234,7 +296,11 @@ export default function TeamIndex({
 										<TableRow key={member.id}>
 											<TableCell>
 												{member.photo_url && (
-													<img src={member.photo_url} alt={member.name} className="h-10 w-10 rounded-full object-cover" />
+													<img
+														src={member.photo_url}
+														alt={member.name}
+														className="h-10 w-10 rounded-full object-cover"
+													/>
 												)}
 											</TableCell>
 											<TableCell>{member.name}</TableCell>

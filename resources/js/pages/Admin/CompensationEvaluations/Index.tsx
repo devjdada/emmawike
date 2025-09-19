@@ -126,7 +126,7 @@ export default function CompensationEvaluationsIndex({
 						<div className="flex items-center gap-4">
 							<div>
 								<h1 className="text-3xl font-bold text-foreground">
-									Compensation Evaluations
+									Compensation Valuations
 								</h1>
 								<p className="text-muted-foreground">
 									Manage all compensation evaluation records

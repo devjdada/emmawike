@@ -23,9 +23,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::put('properties/{property}/status', [PropertyController::class, 'updateStatus'])->name('admin.properties.updateStatus');
     Route::post('properties/{property}/media', [PropertyController::class, 'addMedia'])->name('admin.properties.addMedia');
 
-    Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
-    Route::get('users/create', [UserController::class, 'create'])->name('admin.users.create');
-    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+    Route::resource('users', UserController::class)->names('admin.users');
 
     Route::get('agencies', [AgencyController::class, 'index'])->name('admin.agencies.index');
     Route::get('agencies/create', [AgencyController::class, 'create'])->name('admin.agencies.create');

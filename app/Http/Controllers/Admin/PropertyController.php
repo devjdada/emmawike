@@ -7,11 +7,68 @@ use App\Models\Property;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
-
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class PropertyController extends Controller
 {
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:json,csv,txt',
+        ]);
+
+        $file = $request->file('file');
+        $content = file_get_contents($file);
+        $extension = $file->getClientOriginalExtension();
+
+        $data = [];
+
+        try {
+            if ($extension === 'json') {
+                $data = json_decode($content, true);
+            } elseif ($extension === 'csv' || $extension === 'txt') {
+                $lines = explode("\n", $content);
+                $headers = str_getcsv(array_shift($lines));
+                foreach ($lines as $line) {
+                    if (trim($line) === '') continue;
+                    $row = array_combine($headers, str_getcsv($line));
+                    $data[] = $row;
+                }
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['file' => 'Failed to parse the file. Please check the format.']);
+        }
+
+        foreach ($data as $propertyData) {
+            // Assuming owner_id is provided and corresponds to a user id.
+            // A more robust implementation would find or create the user.
+            $validator = Validator::make($propertyData, [
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'type' => 'required|string',
+                'price' => 'required|numeric',
+                'currency' => 'required|string',
+                'address_line1' => 'required|string',
+                'city' => 'required|string',
+                'state' => 'required|string',
+                'country' => 'required|string',
+                'bedrooms' => 'required|integer',
+                'bathrooms' => 'required|integer',
+                'area_sq_ft' => 'required|integer',
+                'status' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                // Skip this record or collect errors
+                continue;
+            }
+
+            Property::create($validator->validated() + ['owner_id' => auth()->id()]); // Assign to current user for simplicity
+        }
+
+        return redirect()->route('admin.properties.index');
+    }
     public function index()
     {
         $properties = Property::with('media')->get();

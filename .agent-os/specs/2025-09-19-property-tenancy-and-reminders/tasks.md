@@ -1,0 +1,25 @@
+# Tasks: Property Tenancy & Reminders
+
+- [x] 1. **Database and Models**
+  - [x] 1.1. Create migration for `managed_properties` table.
+  - [x] 1.2. Create `ManagedProperty` model.
+  - [x] 1.3. Define relationships in `ManagedProperty` and related models.
+- [x] 2. **Tenancy Management Interface**
+  - [x] 2.1. Create `ManagedPropertyController`.
+  - [x] 2.2. Add route for the management page in `admin.php`.
+  - [x] 2.3. Create React component for the tenancy management page.
+  - [x] 2.4. Implement frontend logic to display tenancy history.
+- [x] 3. **Reminder System**
+  - [x] 3.1. Create `send:rent-reminders` Artisan command.
+  - [x] 3.2. Register the command in the console kernel for daily execution.
+  - [x] 3.3. Implement logic in the command to query for upcoming rent due dates.
+  - [x] 3.4. Update `RentReminderNotification` to support SMS and email.
+  - [x] 3.5. Integrate and configure an SMS service provider.
+- [x] 4. **CRUD for Managed Properties**
+  - [x] 4.1. Update routes to a resource controller.
+  - [x] 4.2. Implement `create` and `store` methods in the controller.
+  - [x] 4.3. Create the `Create` form component.
+  - [x] 4.4. Implement `edit` and `update` methods in the controller.
+  - [x] 4.5. Create the `Edit` form component.
+  - [x] 4.6. Implement the `destroy` method in the controller.
+  - [x] 4.7. Add Create, Edit, and Delete buttons to the index page.

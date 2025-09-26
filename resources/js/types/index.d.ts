@@ -54,6 +54,53 @@ export interface Client {
     website_url: string;
 }
 
+export interface Compensation {
+    id: string;
+    notes: string;
+    total_value: number;
+    status: "pending" | "approved" | "rejected" | "completed";
+    name: string;
+    phone: string;
+    email: string;
+    code: string;
+    created_at: string;
+    updated_at: string;
+    [key: string]: unknown; // Add this line
+}
+
+export interface Valuation {
+    id: string;
+    compensation_id: string;
+    description: string;
+    evaluation_type: string;
+    crop_type?: string;
+    area_acres?: number;
+    yield_per_acre?: number;
+    market_price_per_unit?: number;
+    damage_percentage?: number;
+    machine_type?: string;
+    model?: string;
+    manufacture_year?: number;
+    current_value?: number;
+    depreciation_rate?: number;
+    land_use_type?: string;
+    area_sqft?: number;
+    location_description?: string;
+    zoning_regulations?: string;
+    soil_quality?: string;
+    number_of_units?: number;
+    construction_year?: number;
+    condition?: string;
+    renovation_cost?: number;
+    rate?: number;
+    value?: number;
+    complete_level?: string;
+    complete_amount?: number;
+    created_at: string;
+    updated_at: string;
+    [key: string]: unknown;
+}
+
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
         user: User;

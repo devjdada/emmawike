@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AgencyController;
@@ -12,7 +12,9 @@ use App\Http\Controllers\Admin\TenantController;
 use App\Http\Controllers\Admin\OwnerController;
 use App\Http\Controllers\Admin\CompensationEvaluationController;
 use App\Http\Controllers\Admin\RentAgreementController;
-
+use App\Http\Controllers\Admin\CompensationController;
+use App\Http\Controllers\Admin\ValuationController;
+use App\Http\Controllers\ManagedPropertyController;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('dashboard', function () {
@@ -20,8 +22,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     })->name('admin.dashboard');
 
     Route::resource('properties', PropertyController::class)->names('admin.properties');
+Route::post('properties/import', [PropertyController::class, 'import'])->name('admin.properties.import');
     Route::put('properties/{property}/status', [PropertyController::class, 'updateStatus'])->name('admin.properties.updateStatus');
     Route::post('properties/{property}/media', [PropertyController::class, 'addMedia'])->name('admin.properties.addMedia');
+
+    Route::resource('managed-properties', ManagedPropertyController::class)->names('admin.managed-properties');
 
     Route::resource('users', UserController::class)->names('admin.users');
 
@@ -30,6 +35,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('agencies/{agency}/edit', [AgencyController::class, 'edit'])->name('admin.agencies.edit');
 
     Route::resource('blogs', BlogController::class)->names('admin.blogs');
+    Route::resource('compensations', CompensationController::class)->names('admin.compensations');
+    Route::resource('compensations.valuations', ValuationController::class)->names('admin.compensations.valuations');
 
     Route::resource('services', ServiceController::class)->names('admin.services');
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');

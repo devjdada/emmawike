@@ -56,6 +56,7 @@ import {
 	View,
 } from "lucide-react";
 import { useState } from "react";
+import ImportPropertiesModal from "@/components/ImportPropertiesModal";
 import { truncateText } from "@/lib/utils";
 
 interface Property {
@@ -96,10 +97,7 @@ export default function PropertiesIndex({
 	const [searchTerm, setSearchTerm] = useState("");
 	const [statusFilter, setStatusFilter] = useState("all");
 	const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
-	const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
-	const [currentPropertyId, setCurrentPropertyId] = useState<string | null>(
-		null,
-	);
+	const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
 	const { delete: inertiaDelete } = useForm();
 
@@ -281,7 +279,10 @@ export default function PropertiesIndex({
 								<Download className="mr-2 h-4 w-4" />
 								Export
 							</Button>
-							<Button variant="outline">
+							<Button
+								variant="outline"
+								onClick={() => setIsImportModalOpen(true)}
+							>
 								<Upload className="mr-2 h-4 w-4" />
 								Import
 							</Button>
@@ -549,7 +550,10 @@ export default function PropertiesIndex({
 														<DropdownMenuLabel>Actions</DropdownMenuLabel>
 														<DropdownMenuItem asChild>
 															<Link
-																href={route("admin.properties.show", property.id)}
+																href={route(
+																	"admin.properties.show",
+																	property.id,
+																)}
 															>
 																<View className="mr-2 h-4 w-4" />
 																View Details
@@ -567,7 +571,10 @@ export default function PropertiesIndex({
 														</MediaUploadModal>
 														<DropdownMenuItem asChild>
 															<Link
-																href={route("admin.properties.edit", property.id)}
+																href={route(
+																	"admin.properties.edit",
+																	property.id,
+																)}
 															>
 																<Edit className="mr-2 h-4 w-4" />
 																Edit
@@ -592,6 +599,11 @@ export default function PropertiesIndex({
 					</div>
 				</div>
 			</div>
+
+			<ImportPropertiesModal
+				isOpen={isImportModalOpen}
+				onClose={() => setIsImportModalOpen(false)}
+			/>
 		</AppLayout>
 	);
 }

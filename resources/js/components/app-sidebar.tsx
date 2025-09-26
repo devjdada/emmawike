@@ -39,9 +39,13 @@ const mainNavItems: NavItem[] = [
 	{
 		title: "Properties",
 		href: "/admin/properties",
-		icon: Home,
-	},
-	{
+		        icon: Home,
+		    },
+    {
+        title: "Managed Properties",
+        href: "/admin/managed-properties",
+        icon: Building2, // Or another suitable icon
+    },	{
 		title: "Projects",
 		href: "/admin/projects",
 		icon: Briefcase,
@@ -60,6 +64,11 @@ const mainNavItems: NavItem[] = [
 		title: "Blogs",
 		href: "/admin/blogs",
 		icon: FileText,
+	},
+	{
+		title: "Compensations",
+		href: "/admin/compensations",
+		icon: ClipboardList,
 	},
 	{
 		title: "Services",
@@ -95,11 +104,6 @@ const mainNavItems: NavItem[] = [
 		title: "Owners",
 		href: "/admin/owners",
 		icon: UserCheck,
-	},
-	{
-		title: "Compensation Evaluations",
-		href: "/admin/compensation-evaluations",
-		icon: ClipboardList,
 	},
 	{
 		title: "Rent Agreements",

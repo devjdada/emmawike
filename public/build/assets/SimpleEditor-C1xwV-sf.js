@@ -1,0 +1,1 @@
+import{j as e}from"./index-DryV5q1x.js";import{u as d,f as i,e as n}from"./index-C8mUDJdI.js";const x=({content:t,onChange:o})=>{const r=d({extensions:[i],content:t,onUpdate:({editor:s})=>{o(s.getHTML())}});return e.jsx("div",{className:"min-h-[150px] rounded-md border",children:e.jsx(n,{editor:r})})};export{x as S};

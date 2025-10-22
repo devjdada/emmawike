@@ -35,6 +35,8 @@ class WelcomeController extends Controller
         });
 
         $heroProperties = Property::with('media')
+            ->where('is_featured', true)
+            ->where('status', 'published')
             ->latest()
             ->take(9)
             ->get();
@@ -44,7 +46,7 @@ class WelcomeController extends Controller
                 'id' => $property->id,
                 'title' => $property->title,
                 'description' => Str::limit($property->description, 100),
-                'price' => 'Ksh ' . number_format($property->price),
+                'price' => 'NGN ' . number_format($property->price),
                 'location' => $property->city . ', ' . $property->country,
                 'beds' => $property->bedrooms,
                 'baths' => $property->bathrooms,

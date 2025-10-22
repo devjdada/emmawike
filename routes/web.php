@@ -18,6 +18,7 @@ use App\Http\Controllers\Public\WelcomeController;
 
 
 Route::get('/welcome', WelcomeController::class)->name('home');
+Route::get('/', WelcomeController::class)->name('home');
 
 // Public Routes
 Route::get('/properties', [PropertyController::class, 'publicIndex'])->name('properties.index');

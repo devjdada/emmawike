@@ -87,12 +87,7 @@ export function isMarkButtonDisabled(editor: Editor | null, type: Mark, userDisa
     return false;
 }
 
-export function shouldShowMarkButton(params: {
-    editor: Editor | null;
-    type: Mark;
-    hideWhenUnavailable: boolean;
-    markInSchema: boolean;
-}): boolean {
+export function shouldShowMarkButton(params: { editor: Editor | null; type: Mark; hideWhenUnavailable: boolean; markInSchema: boolean }): boolean {
     const { editor, type, hideWhenUnavailable, markInSchema } = params;
 
     if (!markInSchema || !editor?.editor) {

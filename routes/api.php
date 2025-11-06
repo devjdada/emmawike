@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\RentAgreementController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\WcuFeatureController;
 
 use App\Http\Controllers\API\TeamMemberController;
 use App\Http\Controllers\API\TestimonialController;
@@ -40,4 +41,5 @@ Route::apiResource('complaints', ComplaintController::class);
 Route::apiResource('compensation-evaluations', CompensationEvaluationController::class);
 Route::apiResource('rent-agreements', RentAgreementController::class);
 Route::apiResource('users', UserController::class);
-Route::get('published-properties', [App\Http\Controllers\Api\PublishedPropertyController::class, 'index']);
+
+Route::get('/wcu-features', [WcuFeatureController::class, 'index']);

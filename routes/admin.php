@@ -13,16 +13,18 @@ use App\Http\Controllers\Admin\OwnerController;
 use App\Http\Controllers\Admin\CompensationEvaluationController;
 use App\Http\Controllers\Admin\RentAgreementController;
 use App\Http\Controllers\Admin\CompensationController;
-use App\Http\Controllers\Admin\ValuationController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\WcuFeatureController;
 use App\Http\Controllers\ManagedPropertyController;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('admin.dashboard');
+
+    Route::resource('wcu-features', WcuFeatureController::class)->names('admin.wcu-features');
 
     Route::resource('properties', PropertyController::class)->names('admin.properties');
-Route::post('properties/import', [PropertyController::class, 'import'])->name('admin.properties.import');
+    Route::post('properties/import', [PropertyController::class, 'import'])->name('admin.properties.import');
     Route::put('properties/{property}/status', [PropertyController::class, 'updateStatus'])->name('admin.properties.updateStatus');
     Route::post('properties/{property}/media', [PropertyController::class, 'addMedia'])->name('admin.properties.addMedia');
 

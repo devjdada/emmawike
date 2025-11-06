@@ -1,7 +1,7 @@
-import React from 'react';
-import { Head, Link } from '@inertiajs/react';
 import AppSidebarLayout from '@/Layouts/app/app-sidebar-layout';
 import { Button } from '@/components/ui/button';
+import { Head, Link } from '@inertiajs/react';
+import React from 'react';
 
 interface ManagedProperty {
     id: number;
@@ -34,36 +34,70 @@ const ManagedPropertiesIndex: React.FC<PageProps> = ({ managedProperties }) => {
             <Head title="Property Tenancy Management" />
             <div className="container mx-auto px-4 sm:px-8">
                 <div className="py-8">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-2xl font-semibold leading-tight">Property Tenancy Records</h2>
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-2xl leading-tight font-semibold">Property Tenancy Records</h2>
                         <Link href={route('admin.managed-properties.create')}>
                             <Button>Create New Record</Button>
                         </Link>
                     </div>
-                    <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-                        <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+                    <div className="-mx-4 overflow-x-auto px-4 py-4 sm:-mx-8 sm:px-8">
+                        <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
                             <table className="min-w-full leading-normal">
                                 <thead>
                                     <tr>
-                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Property</th>
-                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tenant</th>
-                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Owner</th>
-                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tenure</th>
-                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Rent Due</th>
-                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"></th>
+                                        <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
+                                            Property
+                                        </th>
+                                        <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
+                                            Tenant
+                                        </th>
+                                        <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
+                                            Owner
+                                        </th>
+                                        <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
+                                            Tenure
+                                        </th>
+                                        <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold tracking-wider text-gray-600 uppercase">
+                                            Rent Due
+                                        </th>
+                                        <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {managedProperties.data.map((record) => (
                                         <tr key={record.id}>
-                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm"><p className="text-gray-900 whitespace-no-wrap">{record.property.name}</p></td>
-                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm"><p className="text-gray-900 whitespace-no-wrap">{record.tenant.name}</p></td>
-                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm"><p className="text-gray-900 whitespace-no-wrap">{record.owner.name}</p></td>
-                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm"><p className="text-gray-900 whitespace-no-wrap">{record.start_date} to {record.end_date ?? 'Present'}</p></td>
-                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm"><p className="text-gray-900 whitespace-no-wrap">{record.rent_due_date}</p></td>
-                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right">
-                                                <Link href={route('admin.managed-properties.edit', record.id)} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
-                                                <Link href={route('admin.managed-properties.destroy', record.id)} method="delete" as="button" className="text-red-600 hover:text-red-900">Delete</Link>
+                                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                                <p className="whitespace-no-wrap text-gray-900">{record.property.name}</p>
+                                            </td>
+                                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                                <p className="whitespace-no-wrap text-gray-900">{record.tenant.name}</p>
+                                            </td>
+                                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                                <p className="whitespace-no-wrap text-gray-900">{record.owner.name}</p>
+                                            </td>
+                                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                                <p className="whitespace-no-wrap text-gray-900">
+                                                    {record.start_date} to {record.end_date ?? 'Present'}
+                                                </p>
+                                            </td>
+                                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                                <p className="whitespace-no-wrap text-gray-900">{record.rent_due_date}</p>
+                                            </td>
+                                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-right text-sm">
+                                                <Link
+                                                    href={route('admin.managed-properties.edit', record.id)}
+                                                    className="mr-4 text-indigo-600 hover:text-indigo-900"
+                                                >
+                                                    Edit
+                                                </Link>
+                                                <Link
+                                                    href={route('admin.managed-properties.destroy', record.id)}
+                                                    method="delete"
+                                                    as="button"
+                                                    className="text-red-600 hover:text-red-900"
+                                                >
+                                                    Delete
+                                                </Link>
                                             </td>
                                         </tr>
                                     ))}

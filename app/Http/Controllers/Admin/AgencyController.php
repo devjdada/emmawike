@@ -12,7 +12,7 @@ class AgencyController extends Controller
     public function index()
     {
         $agencies = Agency::all();
-        return Inertia::render('Admimn/Agencies/Index', [
+        return Inertia::render('Admin/Agencies/Index', [
             'agencies' => $agencies,
         ]);
     }

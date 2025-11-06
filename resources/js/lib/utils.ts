@@ -13,7 +13,8 @@ export function truncateText(text: string, maxLength: number) {
 }
 
 export function formatCurrency(value: number) {
-    return new Intl.NumberFormat('en-NG', { // 'en-NG' for English (Nigeria) locale
+    return new Intl.NumberFormat('en-NG', {
+        // 'en-NG' for English (Nigeria) locale
         style: 'currency',
         currency: 'NGN', // Nigerian Naira
         minimumFractionDigits: 2,

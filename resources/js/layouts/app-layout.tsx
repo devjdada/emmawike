@@ -1,8 +1,8 @@
-import { usePage } from '@inertiajs/react';
+import { useToast } from '@/hooks/use-toast';
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
 import { type BreadcrumbItem, type PageProps } from '@/types';
+import { usePage } from '@inertiajs/react';
 import { type ReactNode, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
 
 interface AppLayoutProps {
     children: ReactNode;

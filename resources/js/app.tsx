@@ -3,10 +3,9 @@ import '../css/nprogress.css';
 
 import { createInertiaApp, router } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import AdminProjectsCreate from '/Users/jdada/Herd/emmawika/resources/js/pages/Admin/Projects/Create.tsx';
 import NProgress from 'nprogress';
 import { createRoot } from 'react-dom/client';
-
+import AdminProjectsCreate from '/Users/jdada/Herd/emmawika/resources/js/pages/Admin/Projects/Create.tsx';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -45,4 +44,3 @@ router.on('finish', () => {
 });
 
 // This will set light / dark mode on load...
-

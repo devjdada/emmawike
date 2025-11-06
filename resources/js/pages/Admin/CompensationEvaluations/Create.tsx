@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
+import { Head } from '@inertiajs/react';
 import CreateCompensationEvaluationForm from './CreateForm';
 
 export default function CreateCompensationEvaluation({ auth, can }: PageProps & { can: { publish: boolean } }) {

@@ -1,5 +1,5 @@
-import ProjectForm from "./ProjectForm";
-import type { PageProps } from "@/types";
+import type { PageProps } from '@/types';
+import ProjectForm from './ProjectForm';
 
 interface Project {
     id: string;

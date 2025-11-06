@@ -1,153 +1,151 @@
-import { Link } from "@inertiajs/react";
+import { NavFooter } from '@/components/nav-footer';
+import { NavMain } from '@/components/nav-main';
+import { NavUser } from '@/components/nav-user';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import type { NavItem } from '@/types';
+import { Link } from '@inertiajs/react';
 import {
-	BookOpen,
-	Briefcase,
-	Building2,
-	ClipboardList,
-	FileSignature,
-	FileText,
-	Folder,
-	Home,
-	LayoutGrid,
-	Settings,
-	UserCheck,
-	UserSquare2,
-	Users,
-	Star,
-} from "lucide-react";
-import { NavFooter } from "@/components/nav-footer";
-import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
-import {
-	Sidebar,
-	SidebarContent,
-	SidebarFooter,
-	SidebarHeader,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import type { NavItem } from "@/types";
-import AppLogo from "./app-logo";
+    BookOpen,
+    Briefcase,
+    Building2,
+    ClipboardList,
+    FileSignature,
+    FileText,
+    Folder,
+    Home,
+    LayoutGrid,
+    Settings,
+    Star,
+    UserCheck,
+    UserSquare2,
+    Users,
+} from 'lucide-react';
+import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
-	{
-		title: "Dashboard",
-		href: "/admin/dashboard",
-		icon: LayoutGrid,
-	},
-	{
-		title: "Properties",
-		href: "/admin/properties",
-		        icon: Home,
-		    },
     {
-        title: "Managed Properties",
-        href: "/admin/managed-properties",
+        title: 'Dashboard',
+        href: '/admin/dashboard',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Properties',
+        href: '/admin/properties',
+        icon: Home,
+    },
+    {
+        title: 'Managed Properties',
+        href: '/admin/managed-properties',
         icon: Building2, // Or another suitable icon
-    },	{
-		title: "Projects",
-		href: "/admin/projects",
-		icon: Briefcase,
-	},
-	{
-		title: "User",
-		href: "/admin/users",
-		icon: Users,
-	},
-	{
-		title: "Agency",
-		href: "/admin/agencies",
-		icon: Building2,
-	},
-	{
-		title: "Blogs",
-		href: "/admin/blogs",
-		icon: FileText,
-	},
-	{
-		title: "Compensations",
-		href: "/admin/compensations",
-		icon: ClipboardList,
-	},
-	{
-		title: "Services",
-		href: "/admin/services",
-		icon: Settings,
-	},
+    },
     {
-        title: "Categories",
-        href: "/admin/categories",
+        title: 'Projects',
+        href: '/admin/projects',
+        icon: Briefcase,
+    },
+    {
+        title: 'User',
+        href: '/admin/users',
+        icon: Users,
+    },
+    {
+        title: 'Agency',
+        href: '/admin/agencies',
+        icon: Building2,
+    },
+    {
+        title: 'Blogs',
+        href: '/admin/blogs',
+        icon: FileText,
+    },
+    {
+        title: 'Compensations',
+        href: '/admin/compensations',
         icon: ClipboardList,
     },
-	{
-		title: "Team Members",
-		href: "/admin/teams",
-		icon: Users,
-	},
-	{
-		title: "Testimonials",
-		href: "/admin/testimonials",
-		icon: Star,
-	},
-	{
-		title: "Clients",
-		href: "/admin/clients",
-		icon: Briefcase,
-	},
-	{
-		title: "Tenants",
-		href: "/admin/tenants",
-		icon: UserSquare2,
-	},
-	{
-		title: "Owners",
-		href: "/admin/owners",
-		icon: UserCheck,
-	},
-	{
-		title: "Rent Agreements",
-		href: "/admin/rent-agreements",
-		icon: FileSignature,
-	},
+    {
+        title: 'Services',
+        href: '/admin/services',
+        icon: Settings,
+    },
+    {
+        title: 'Categories',
+        href: '/admin/categories',
+        icon: ClipboardList,
+    },
+    {
+        title: 'Team Members',
+        href: '/admin/teams',
+        icon: Users,
+    },
+    {
+        title: 'Testimonials',
+        href: '/admin/testimonials',
+        icon: Star,
+    },
+    {
+        title: 'Why Choose Us Features',
+        href: '/admin/wcu-features',
+        icon: Star,
+    },
+    {
+        title: 'Clients',
+        href: '/admin/clients',
+        icon: Briefcase,
+    },
+    {
+        title: 'Tenants',
+        href: '/admin/tenants',
+        icon: UserSquare2,
+    },
+    {
+        title: 'Owners',
+        href: '/admin/owners',
+        icon: UserCheck,
+    },
+    {
+        title: 'Rent Agreements',
+        href: '/admin/rent-agreements',
+        icon: FileSignature,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
-	{
-		title: "Repository",
-		href: "https://github.com/laravel/react-starter-kit",
-		icon: Folder,
-	},
-	{
-		title: "Documentation",
-		href: "https://laravel.com/docs/starter-kits#react",
-		icon: BookOpen,
-	},
+    {
+        title: 'Repository',
+        href: 'https://github.com/laravel/react-starter-kit',
+        icon: Folder,
+    },
+    {
+        title: 'Documentation',
+        href: 'https://laravel.com/docs/starter-kits#react',
+        icon: BookOpen,
+    },
 ];
 
 export function AppSidebar() {
-	return (
-		<Sidebar collapsible="icon" variant="inset">
-			<SidebarHeader>
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton size="lg" asChild>
-							<Link href="/dashboard" prefetch>
-								<AppLogo />
-							</Link>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-				</SidebarMenu>
-			</SidebarHeader>
+    return (
+        <Sidebar collapsible="icon" variant="inset">
+            <SidebarHeader>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton size="lg" asChild>
+                            <Link href="/dashboard" prefetch>
+                                <AppLogo />
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarHeader>
 
-			<SidebarContent>
-				<NavMain items={mainNavItems} />
-			</SidebarContent>
+            <SidebarContent>
+                <NavMain items={mainNavItems} />
+            </SidebarContent>
 
-			<SidebarFooter>
-				<NavFooter items={footerNavItems} className="mt-auto" />
-				<NavUser />
-			</SidebarFooter>
-		</Sidebar>
-	);
+            <SidebarFooter>
+                <NavFooter items={footerNavItems} className="mt-auto" />
+                <NavUser />
+            </SidebarFooter>
+        </Sidebar>
+    );
 }

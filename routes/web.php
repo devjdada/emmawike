@@ -17,7 +17,6 @@ use App\Http\Controllers\Public\SearchController;
 use App\Http\Controllers\Public\WelcomeController;
 
 
-Route::get('/welcome', WelcomeController::class)->name('home');
 Route::get('/', WelcomeController::class)->name('home');
 
 // Public Routes

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Property;
+use App\Models\Testimonial;
+use App\Models\Client;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -55,9 +57,14 @@ class WelcomeController extends Controller
             ];
         });
 
+        $testimonials = Testimonial::all();
+        $clients = Client::all();
+
         return Inertia::render('welcome', [
             'featuredProperties' => $formattedProperties,
             'heroProperties' => $formattedHeroProperties,
+            'testimonials' => $testimonials,
+            'clients' => $clients,
         ]);
     }
 }

@@ -1,9 +1,9 @@
-import { Head, Link } from '@inertiajs/react';
-import PublicLayout from '@/layouts/PublicLayout';
-import { Property } from '@/types/property';
 import FeaturedListings from '@/components/home/FeaturedListings';
 import SearchBar from '@/components/home/SearchBar';
 import { Button } from '@/components/ui/button';
+import PublicLayout from '@/layouts/PublicLayout';
+import { Property } from '@/types/property';
+import { Head, Link } from '@inertiajs/react';
 
 interface SearchPageProps {
     properties: {
@@ -24,11 +24,9 @@ export default function Index({ properties, filters }: SearchPageProps) {
         <PublicLayout>
             <Head title="Search Results" />
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <h1 className="text-3xl font-bold mb-8">
-                        Search Results
-                    </h1>
-                    
+                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <h1 className="mb-8 text-3xl font-bold">Search Results</h1>
+
                     <div className="mb-8">
                         <SearchBar initialValues={filters} />
                     </div>

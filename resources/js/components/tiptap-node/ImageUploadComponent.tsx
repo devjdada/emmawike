@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ImageUploadComponent = (props: any) => {
     const { src } = props.node.attrs;
 

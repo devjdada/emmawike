@@ -1,7 +1,6 @@
-import React from 'react';
-import { Head, usePage } from '@inertiajs/react';
 import PublicLayout from '@/layouts/PublicLayout';
 import type { PageProps } from '@/types';
+import { Head } from '@inertiajs/react';
 
 interface Agent {
     id: string;
@@ -19,9 +18,9 @@ export default function AgentShow({ agent }: AgentShowProps) {
         <PublicLayout>
             <Head title={agent.name} />
             <div className="container mx-auto py-8">
-                <article className="bg-white rounded-lg shadow-md p-6">
-                    <h1 className="text-3xl font-bold mb-4">{agent.name}</h1>
-                    <p className="text-gray-600 mb-4">{agent.email}</p>
+                <article className="rounded-lg bg-white p-6 shadow-md">
+                    <h1 className="mb-4 text-3xl font-bold">{agent.name}</h1>
+                    <p className="mb-4 text-gray-600">{agent.email}</p>
                     {/* Add more agent details as needed */}
                 </article>
             </div>

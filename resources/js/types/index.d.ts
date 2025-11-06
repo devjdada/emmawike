@@ -1,6 +1,3 @@
-import { LucideIcon } from 'lucide-react';
-import type { Config } from 'ziggy-js';
-
 export interface Agency {
     id: string;
     name: string;
@@ -58,7 +55,7 @@ export interface Compensation {
     id: string;
     notes: string;
     total_value: number;
-    status: "pending" | "approved" | "rejected" | "completed";
+    status: 'pending' | 'approved' | 'rejected' | 'completed';
     name: string;
     phone: string;
     email: string;

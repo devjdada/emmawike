@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -19,10 +20,12 @@ class ContactController extends Controller
         ];
 
         $services = Service::inRandomOrder()->limit(4)->get();
+        $teamMembers = TeamMember::all();
 
         return Inertia::render('Public/Contact/Index', [
             'contactInfo' => $contactInfo,
             'services' => $services,
+            'teamMembers' => $teamMembers,
         ]);
     }
 }

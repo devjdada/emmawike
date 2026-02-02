@@ -2,9 +2,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import type { PageProps } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import type { PageProps, Property, User } from '@/types';
+import { Head } from '@inertiajs/react';
 import { useState } from 'react';
+import NewTenantDialog from './NewTenantDialog';
 
 interface Tenant {
     id: number;
@@ -12,14 +13,19 @@ interface Tenant {
     property_id: number;
     start_date: string;
     end_date: string | null;
+    user: User;
+    property: Property;
 }
 
 interface TenantsIndexProps extends PageProps {
     tenants: Tenant[];
+    users: User[];
+    properties: Property[];
 }
 
-export default function TenantsIndex({ auth, tenants }: TenantsIndexProps) {
+export default function TenantsIndex({ auth, tenants, users, properties }: TenantsIndexProps) {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [isNewTenantDialogOpen, setIsNewTenantDialogOpen] = useState(false);
     const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
 
     const handleDeleteClick = (tenant: Tenant) => {
@@ -41,16 +47,21 @@ export default function TenantsIndex({ auth, tenants }: TenantsIndexProps) {
 
             <div className="mb-4 flex items-center justify-between">
                 <h1 className="text-2xl font-semibold">Tenants</h1>
-                <Button asChild>
-                    <Link href={route('admin.tenants.create')}>Add New Tenant</Link>
-                </Button>
+                <Button onClick={() => setIsNewTenantDialogOpen(true)}>Add New Tenant</Button>
             </div>
+
+            <NewTenantDialog
+                isOpen={isNewTenantDialogOpen}
+                onClose={() => setIsNewTenantDialogOpen(false)}
+                users={users}
+                properties={properties}
+            />
 
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>User ID</TableHead>
-                        <TableHead>Property ID</TableHead>
+                        <TableHead>User</TableHead>
+                        <TableHead>Property</TableHead>
                         <TableHead>Start Date</TableHead>
                         <TableHead>End Date</TableHead>
                         <TableHead>Actions</TableHead>
@@ -59,8 +70,8 @@ export default function TenantsIndex({ auth, tenants }: TenantsIndexProps) {
                 <TableBody>
                     {tenants.map((tenant) => (
                         <TableRow key={tenant.id}>
-                            <TableCell>{tenant.user_id}</TableCell>
-                            <TableCell>{tenant.property_id}</TableCell>
+                            <TableCell>{tenant.user.name}</TableCell>
+                            <TableCell>{tenant.property.name}</TableCell>
                             <TableCell>{tenant.start_date}</TableCell>
                             <TableCell>{tenant.end_date || 'N/A'}</TableCell>
                             <TableCell>
@@ -81,7 +92,7 @@ export default function TenantsIndex({ auth, tenants }: TenantsIndexProps) {
                     <DialogHeader>
                         <DialogTitle>Are you absolutely sure?</DialogTitle>
                         <DialogDescription>
-                            This action cannot be undone. This will permanently delete the tenant record for User ID "{selectedTenant?.user_id}".
+                            This action cannot be undone. This will permanently delete the tenant record for "{selectedTenant?.user.name}".
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end space-x-2">

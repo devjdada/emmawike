@@ -37,8 +37,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('agencies/{agency}/edit', [AgencyController::class, 'edit'])->name('admin.agencies.edit');
 
     Route::resource('blogs', BlogController::class)->names('admin.blogs');
-    Route::resource('compensations', CompensationController::class)->names('admin.compensations');
+    // Route::resource('compensations', CompensationController::class)->names('admin.compensations');
     Route::resource('compensations.valuations', ValuationController::class)->names('admin.compensations.valuations');
+    Route::resource('compensations', CompensationEvaluationController::class)->names('admin.compensations');
 
     Route::resource('services', ServiceController::class)->names('admin.services');
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
@@ -55,6 +56,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::delete('projects/{project}', [ProjectController::class, 'destroy'])->name('admin.projects.destroy')->middleware('can:is_admin');
 
     Route::get('tenants', [TenantController::class, 'index'])->name('admin.tenants.index');
+    Route::post('tenants', [TenantController::class, 'store'])->name('admin.tenants.store');
     Route::get('tenants/create', [TenantController::class, 'create'])->name('admin.tenants.create');
     Route::get('tenants/{tenant}/edit', [TenantController::class, 'edit'])->name('admin.tenants.edit');
 

@@ -1,3 +1,4 @@
+import CreateUserDialog from '@/components/CreateUserDialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,7 @@ interface UsersIndexProps extends PageProps {
 
 export default function UsersIndex({ auth, users, filters }: UsersIndexProps) {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [search, setSearch] = useState(filters.search || '');
     const [role, setRole] = useState(filters.role || 'all');
@@ -64,9 +66,7 @@ export default function UsersIndex({ auth, users, filters }: UsersIndexProps) {
 
             <div className="mb-4 flex items-center justify-between">
                 <h1 className="text-2xl font-semibold">Users</h1>
-                <Button asChild>
-                    <Link href={route('admin.users.create')}>Add New User</Link>
-                </Button>
+                <Button onClick={() => setIsAddUserDialogOpen(true)}>Add New User</Button>
             </div>
 
             <div className="mb-4 flex items-center space-x-4">
@@ -127,6 +127,8 @@ export default function UsersIndex({ auth, users, filters }: UsersIndexProps) {
                     ))}
                 </div>
             </div>
+
+            <CreateUserDialog isOpen={isAddUserDialogOpen} onClose={() => setIsAddUserDialogOpen(false)} />
 
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <DialogContent>

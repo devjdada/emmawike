@@ -98,6 +98,34 @@ export interface Valuation {
     [key: string]: unknown;
 }
 
+export interface Property {
+    id: number;
+    name: string;
+    title: string;
+    description: string;
+    type: string;
+    price: number;
+    address_line1: string;
+    city: string;
+    country: string;
+    bedrooms: number;
+    bathrooms: number;
+    area_sq_ft: number;
+    status: string;
+    is_featured: boolean;
+    views: number;
+}
+
+export interface Tenant {
+    id: number;
+    user_id: number;
+    property_id: number;
+    start_date: string;
+    end_date: string | null;
+    user: User;
+    property: Property;
+}
+
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
         user: User;

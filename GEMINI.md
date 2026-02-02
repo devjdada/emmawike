@@ -3,8 +3,7 @@
 This document outlines the development roadmap for the Emma Wika project, a comprehensive real estate management platform.
 
 ## 1. Vision & Strategy
-
-The vision is to create a multi-tenant, full-service real estate platform that serves as a centralized API for both a web application and a mobile app. The system will manage property listings, agent and agency profiles, tenant and property owner portals, and content like blogs and services.
+The vision is to create a multi-tenant, full-service real estate platform that serves as  web application both for public and admin and  a centralized  API for  a mobile app. The system will manage property listings, agent and agency profiles, tenant and property owner portals, and content like blogs and services.
 
 - **Project Name:** Emma Wika Real Estate Platform
 - **Core Problem:** Centralize real estate operations, from property listing to tenant management and agent coordination.

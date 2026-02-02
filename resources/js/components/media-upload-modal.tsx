@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -21,7 +21,7 @@ export default function MediaUploadModal({ onUpload }: MediaUploadModalProps) {
             setFiles(selectedFiles);
 
             const newPreviews: string[] = [];
-            selectedFiles.forEach(file => {
+            selectedFiles.forEach((file) => {
                 newPreviews.push(URL.createObjectURL(file));
             });
             setPreviews(newPreviews);
@@ -31,6 +31,7 @@ export default function MediaUploadModal({ onUpload }: MediaUploadModalProps) {
     const handleUpload = () => {
         onUpload(files, label);
         setFiles([]);
+        setPreviews([]);
         setIsOpen(false);
     };
 
@@ -42,6 +43,7 @@ export default function MediaUploadModal({ onUpload }: MediaUploadModalProps) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Upload Media</DialogTitle>
+                    <DialogDescription>Upload images or videos for the property.</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                     <div>
@@ -51,11 +53,14 @@ export default function MediaUploadModal({ onUpload }: MediaUploadModalProps) {
                     {previews.length > 0 && (
                         <div className="grid grid-cols-2 gap-2">
                             {previews.map((preview, index) => (
-                                <div key={index} className="relative w-full h-24 bg-gray-100 rounded-md overflow-hidden flex items-center justify-center">
+                                <div
+                                    key={index}
+                                    className="relative flex h-24 w-full items-center justify-center overflow-hidden rounded-md bg-gray-100"
+                                >
                                     {files[index].type.startsWith('image') ? (
-                                        <img src={preview} alt="Preview" className="object-cover w-full h-full" />
+                                        <img src={preview} alt="Preview" className="h-full w-full object-cover" />
                                     ) : (
-                                        <video src={preview} controls className="object-cover w-full h-full" />
+                                        <video src={preview} controls className="h-full w-full object-cover" />
                                     )}
                                 </div>
                             ))}

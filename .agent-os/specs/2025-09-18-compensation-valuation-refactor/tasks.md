@@ -1,0 +1,35 @@
+# Spec Tasks
+
+## Tasks
+- [ ] 1. [Database Schema Refactoring]
+  - [ ] 1.1 Create `compensation` migration with specified fields.
+  - [ ] 1.2 Create `valuation` migration with specified fields and `compensation_id` foreign key.
+  - [ ] 1.3 Create `Compensation` Eloquent model.
+  - [ ] 1.4 Create `Valuation` Eloquent model with relationship to `Compensation`.
+  - [ ] 1.5 Update `app/Http/Controllers/Admin/CompensationEvaluationsController.php` to reflect new models (or prepare for removal).
+  - [ ] 1.6 Run database migrations.
+- [ ] 2. [Compensation Backend CRUD]
+  - [ ] 2.1 Create `Admin/CompensationController`.
+  - [ ] 2.2 Implement `index` method for `CompensationController`.
+  - [ ] 2.3 Implement `store` method for `CompensationController`.
+  - [ ] 2.4 Implement `update` method for `CompensationController`.
+  - [ ] 2.5 Implement `destroy` method for `CompensationController`.
+  - [ ] 2.6 Define API routes for Compensation CRUD in `routes/admin.php`.
+- [ ] 3. [Compensation Frontend (Admin Panel)]
+  - [ ] 3.1 Create `resources/js/pages/Admin/Compensation/Index.tsx` for listing compensations.
+  - [ ] 3.2 Create `resources/js/components/CreateEditCompensationModal.tsx` for create/edit operations.
+  - [ ] 3.3 Integrate `CreateEditCompensationModal` into `Compensation/Index.tsx`.
+  - [ ] 3.4 Update `resources/js/types/index.d.ts` with `Compensation` interface.
+  - [ ] 3.5 Update `resources/js/components/app-sidebar.tsx` for navigation to Compensation.
+- [ ] 4. [Valuation Backend CRUD]
+  - [ ] 4.1 Create `Admin/ValuationController`.
+  - [ ] 4.2 Implement `store` method for `ValuationController` (linking to `compensation_id`).
+  - [ ] 4.3 Implement `update` method for `ValuationController`.
+  - [ ] 4.4 Implement `destroy` method for `ValuationController`.
+  - [ ] 4.5 Define API routes for Valuation CRUD in `routes/admin.php`.
+- [ ] 5. [Valuation Frontend (Admin Panel) & UI Integration]
+  - [ ] 5.1 Create `resources/js/components/CreateEditValuationModal.tsx` for create/edit operations.
+  - [ ] 5.2 Implement dynamic field rendering in `CreateEditValuationModal` based on `evaluation_type`.
+  - [ ] 5.3 Update `resources/js/types/index.d.ts` with `Valuation` interface.
+  - [ ] 5.4 Add "Create Valuation" button/action to `Admin/Compensation/Index.tsx` (or a detail view if created).
+  - [ ] 5.5 Implement display of associated valuations within `Admin/Compensation/Index.tsx` (or a detail view).

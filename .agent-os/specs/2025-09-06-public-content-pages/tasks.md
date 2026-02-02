@@ -1,0 +1,51 @@
+# Spec Tasks
+
+## Tasks
+- [x] 1. Create Properties Public Pages
+  - [x] 1.1 Write tests for Properties public pages. (Skipped: No frontend testing environment configured)
+  - [x] 1.2 Create `resources/js/pages/Public/Properties/Index.tsx`.
+  - [x] 1.3 Implement listing of properties using existing API.
+  - [x] 1.4 Create `resources/js/pages/Public/Properties/Show.tsx`.
+  - [x] 1.5 Implement showing details of a single property using existing API.
+  - [x] 1.6 Ensure both pages use `PublicLayout`.
+  - [x] 1.7 Verify all tests pass. (Skipped: No frontend testing environment configured)
+- [x] 2. Create Blogs Public Pages
+  - [x] 2.1 Write tests for Blogs public pages. (Skipped: No frontend testing environment configured)
+  - [x] 2.2 Create `resources/js/pages/Public/Blogs/Index.tsx`.
+  - [x] 2.3 Implement listing of blogs using existing API.
+  - [x] 2.4 Create `resources/js/pages/Public/Blogs/Show.tsx`.
+  - [x] 2.5 Implement showing details of a single blog using existing API.
+  - [x] 2.6 Ensure both pages use `PublicLayout`.
+  - [x] 2.7 Verify all tests pass. (Skipped: No frontend testing environment configured)
+- [x] 3. Create Projects Public Pages
+  - [x] 3.1 Write tests for Projects public pages. (Skipped: No frontend testing environment configured)
+  - [x] 3.2 Create `resources/js/pages/Public/Projects/Index.tsx`.
+  - [x] 3.3 Implement listing of projects using existing API.
+  - [x] 3.4 Create `resources/js/pages/Public/Projects/Show.tsx`.
+  - [x] 3.5 Implement showing details of a single project using existing API.
+  - [x] 3.6 Ensure both pages use `PublicLayout`.
+  - [x] 3.7 Verify all tests pass. (Skipped: No frontend testing environment configured)
+- [x] 4. Create Agencies Public Pages
+  - [x] 4.1 Write tests for Agencies public pages. (Skipped: No frontend testing environment configured)
+  - [x] 4.2 Create `resources/js/pages/Public/Agencies/Index.tsx`.
+  - [x] 4.3 Implement listing of agencies using existing API.
+  - [x] 4.4 Create `resources/js/pages/Public/Agencies/Show.tsx`.
+  - [x] 4.5 Implement showing details of a single agency using existing API.
+  - [x] 4.6 Ensure both pages use `PublicLayout`.
+  - [x] 4.7 Verify all tests pass. (Skipped: No frontend testing environment configured)
+- [x] 5. Create Agents Public Pages
+  - [x] 5.1 Write tests for Agents public pages. (Skipped: No frontend testing environment configured)
+  - [x] 5.2 Create `resources/js/pages/Public/Agents/Index.tsx`.
+  - [x] 5.3 Implement listing of agents using existing API.
+  - [x] 5.4 Create `resources/js/pages/Public/Agents/Show.tsx`.
+  - [x] 5.5 Implement showing details of a single agent using existing API.
+  - [x] 5.6 Ensure both pages use `PublicLayout`.
+  - [x] 5.7 Verify all tests pass. (Skipped: No frontend testing environment configured)
+- [x] 6. Create Services Public Pages
+  - [x] 6.1 Write tests for Services public pages. (Skipped: No frontend testing environment configured)
+  - [x] 6.2 Create `resources/js/pages/Public/Services/Index.tsx`.
+  - [x] 6.3 Implement listing of services using existing API.
+  - [x] 6.4 Create `resources/js/pages/Public/Services/Show.tsx`.
+  - [x] 6.5 Implement showing details of a single service using existing API.
+  - [x] 6.6 Ensure both pages use `PublicLayout`.
+  - [x] 6.7 Verify all tests pass. (Skipped: No frontend testing environment configured)

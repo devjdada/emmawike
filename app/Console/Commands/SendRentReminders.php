@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Tenant;
-use App\Notifications\RentReminderNotification;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
+use App\Models\ManagedProperty;
+use App\Notifications\RentReminderNotification;
+use Carbon\Carbon;
 
 class SendRentReminders extends Command
 {
@@ -14,28 +14,47 @@ class SendRentReminders extends Command
      *
      * @var string
      */
-    protected $signature = 'app:send-rent-reminders';
+    protected $signature = 'send:rent-reminders';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Sends rent reminders to tenants.';
+    protected $description = 'Send rent reminders to tenants';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $tenants = Tenant::whereMonth('start_date', '=', Carbon::now()->month)
-            ->whereDay('start_date', '=', Carbon::now()->addDays(7)->day)
+        $this->info('Sending rent reminders...');
+
+        $twoMonthsFromNow = Carbon::now()->addMonths(2);
+        $oneWeekFromNow = Carbon::now()->addWeek();
+
+        // Find properties where rent is due in the next 2 months (for email)
+        $propertiesForEmail = ManagedProperty::where('rent_due_date', '<=', $twoMonthsFromNow)
+            ->where('rent_due_date', '>', $oneWeekFromNow)
+            ->whereNull('end_date') // Only active tenants
             ->get();
 
-        foreach ($tenants as $tenant) {
-            $tenant->user->notify(new RentReminderNotification($tenant->user->name, $tenant->property->location));
+        foreach ($propertiesForEmail as $managedProperty) {
+            $managedProperty->tenant->notify(new RentReminderNotification($managedProperty, 'mail'));
+            $this->info("Email reminder sent to: {$managedProperty->tenant->name}");
         }
 
-        $this->info('Rent reminders sent successfully!');
+        // Find properties where rent is due in the next week (for SMS)
+        $propertiesForSms = ManagedProperty::where('rent_due_date', '<=', $oneWeekFromNow)
+            ->where('rent_due_date', '>', Carbon::now())
+            ->whereNull('end_date') // Only active tenants
+            ->get();
+
+        foreach ($propertiesForSms as $managedProperty) {
+            $managedProperty->tenant->notify(new RentReminderNotification($managedProperty, 'sms'));
+            $this->info("SMS reminder sent to: {$managedProperty->tenant->name}");
+        }
+
+        $this->info('Rent reminders sent successfully.');
     }
 }

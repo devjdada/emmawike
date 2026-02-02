@@ -1,68 +1,40 @@
 <?php
 
+
+
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\PropertyController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\AgencyController;
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\TenantController;
-use App\Http\Controllers\OwnerController;
-use App\Http\Controllers\CompensationEvaluationController;
-use App\Http\Controllers\RentAgreementController;
+use App\Http\Controllers\Public\PropertyController;
+use App\Http\Controllers\Public\BlogController;
+use App\Http\Controllers\Public\ServiceController;
+use App\Http\Controllers\Public\ProjectController;
+use App\Http\Controllers\Public\UserController;
+use App\Http\Controllers\Public\AgencyController;
+use App\Http\Controllers\Public\ContactController;
+use App\Http\Controllers\PublicPageController;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+use App\Http\Controllers\Public\SearchController;
+use App\Http\Controllers\Public\WelcomeController;
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
 
-    Route::resource('properties', PropertyController::class);
-    Route::put('properties/{property}/status', [PropertyController::class, 'updateStatus'])->name('properties.updateStatus');
-    Route::post('properties/{property}/media', [PropertyController::class, 'addMedia'])->name('properties.addMedia');
+Route::get('/', WelcomeController::class)->name('home');
 
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
-    Route::get('users/create', [UserController::class, 'create'])->name('users.create');
-    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+// Public Routes
+Route::get('/properties', [PropertyController::class, 'publicIndex'])->name('properties.index');
+Route::get('/properties/{property}', [PropertyController::class, 'publicShow'])->name('properties.show');
+Route::get('/blogs', [BlogController::class, 'publicIndex'])->name('blogs.index');
+Route::get('/blogs/{blog}', [BlogController::class, 'publicShow'])->name('blogs.show');
+Route::get('/services', [ServiceController::class, 'publicIndex'])->name('services.index');
+Route::get('/services/{service}', [ServiceController::class, 'publicShow'])->name('services.show');
+Route::get('/projects', [ProjectController::class, 'publicIndex'])->name('projects.index');
+Route::get('/projects/{project}', [ProjectController::class, 'publicShow'])->name('projects.show');
+Route::get('/agents', [UserController::class, 'publicIndex'])->name('agents.index');
+Route::get('/agencies', [AgencyController::class, 'publicIndex'])->name('agencies.index');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::get('/about', [PublicPageController::class, 'about'])->name('about.index');
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
-    Route::get('agencies', [AgencyController::class, 'index'])->name('agencies.index');
-    Route::get('agencies/create', [AgencyController::class, 'create'])->name('agencies.create');
-    Route::get('agencies/{agency}/edit', [AgencyController::class, 'edit'])->name('agencies.edit');
 
-    Route::get('blogs', [BlogController::class, 'index'])->name('blogs.index');
-    Route::get('blogs/create', function () {
-        return Inertia::render('Blogs/CreatePage'); // Point to the new full page component
-    })->name('blogs.create');
-    Route::get('blogs/{blog}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
-
-    Route::get('services', [ServiceController::class, 'index'])->name('services.index');
-    Route::get('services/create', [ServiceController::class, 'create'])->name('services.create');
-    Route::get('services/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
-
-    Route::get('projects', [ProjectController::class, 'index'])->name('projects.index');
-    Route::get('projects/create', [ProjectController::class, 'create'])->name('projects.create');
-    Route::get('projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-    Route::post('projects', [ProjectController::class, 'store'])->name('projects.store')->middleware('can:is_admin');
-
-    Route::get('tenants', [TenantController::class, 'index'])->name('tenants.index');
-    Route::get('tenants/create', [TenantController::class, 'create'])->name('tenants.create');
-    Route::get('tenants/{tenant}/edit', [TenantController::class, 'edit'])->name('tenants.edit');
-
-    Route::get('owners', [OwnerController::class, 'index'])->name('owners.index');
-    Route::get('owners/create', [OwnerController::class, 'create'])->name('owners.create');
-    Route::get('owners/{owner}/edit', [OwnerController::class, 'edit'])->name('owners.edit');
-
-    Route::resource('compensation-evaluations', CompensationEvaluationController::class);
-
-    Route::get('rent-agreements', [RentAgreementController::class, 'index'])->name('rent-agreements.index');
-    Route::get('rent-agreements/create', [RentAgreementController::class, 'create'])->name('rent-agreements.create');
-    Route::get('rent-agreements/{rent_agreement}/edit', [RentAgreementController::class, 'edit'])->name('rent-agreements.edit');
-});
-
+require __DIR__ . '/admin.php';
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
